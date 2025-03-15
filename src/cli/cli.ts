@@ -4,14 +4,12 @@
  * Nurexia CLI - Command Line Interface
  */
 
-import { greet } from '../index.js';
-
 // CLI 진입점
 const main = async (): Promise<void> => {
   const args = process.argv.slice(2);
   const name = args[0] || 'CLI User';
 
-  console.log(greet(name));
+  console.log(`Hello, ${name}!`);
 };
 
 // CLI 실행
