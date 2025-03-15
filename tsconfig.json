@@ -1,0 +1,57 @@
+{
+  "compilerOptions": {
+    /* 언어 및 환경 설정 */
+    "target": "ESNext",                                  /* 최신 ECMAScript 표준 사용 */
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],            /* 사용할 라이브러리 지정 */
+    "experimentalDecorators": false,                     /* 데코레이터 지원 활성화 */
+    "emitDecoratorMetadata": false,                      /* 데코레이터 메타데이터 생성 활성화 */
+    "useDefineForClassFields": true,                     /* 클래스 필드에 대해 ECMAScript 표준 사용 */
+
+    /* 모듈 설정 */
+    "module": "ESNext",                                  /* 모듈 코드 생성 방식 지정 */
+    "moduleResolution": "Node",                          /* 모듈 해석 방식 지정 */
+    "baseUrl": "./",                                     /* 상대 경로가 아닌 모듈을 해석하기 위한 기본 디렉토리 */
+    "paths": {},                                         /* 'baseUrl'에 상대적인 경로 매핑 설정 */
+    "resolveJsonModule": true,                           /* JSON 모듈 가져오기 허용 */
+
+    /* JavaScript 지원 */
+    "allowJs": true,                                     /* JavaScript 파일 컴파일 허용 */
+    "checkJs": false,                                    /* JavaScript 파일에 오류 보고 */
+
+    /* 출력 설정 */
+    "outDir": "./dist",                                  /* 출력 구조를 리디렉션할 디렉토리 */
+    "removeComments": true ,                             /* 주석 제거 여부 */
+    "sourceMap": false,                                   /* 소스맵 파일 생성 여부 */
+    "declaration": false,                                 /* '.d.ts' 파일 생성 여부 */
+    "declarationMap": false,                              /* 각 '.d.ts' 파일에 대한 소스맵 생성 여부 */
+
+    /* 타입 체크 설정 */
+    "strict": true,                                      /* 모든 엄격한 타입 체크 옵션 활성화 */
+    "noImplicitAny": true,                               /* 암시적 'any' 타입 표현식 오류 발생 여부 */
+    "strictNullChecks": true,                            /* 엄격한 null 체크 활성화 */
+    "strictFunctionTypes": true,                         /* 함수 타입에 대한 엄격한 검사 활성화 */
+    "strictBindCallApply": true,                         /* 함수에 대한 엄격한 'bind', 'call', 'apply' 메서드 활성화 */
+    "strictPropertyInitialization": true,                /* 클래스의 속성 초기화 엄격 검사 활성화 */
+    "noImplicitThis": true,                              /* 'this' 표현식에 암시적 'any' 타입 오류 발생 여부 */
+    "alwaysStrict": true,                                /* 엄격 모드에서 구문 분석 및 각 소스 파일에 "use strict" 생성 */
+    "noUnusedLocals": true,                              /* 사용되지 않는 지역 변수에 대한 오류 보고 여부 */
+    "noUnusedParameters": true,                          /* 사용되지 않는 매개변수에 대한 오류 보고 여부 */
+    "exactOptionalPropertyTypes": true,                  /* 선택적 속성 타입의 정확한 검사 활성화 */
+    "noImplicitReturns": true,                           /* 함수의 모든 코드 경로가 값을 반환하지 않을 때 오류 보고 여부 */
+    "noFallthroughCasesInSwitch": true,                  /* switch 문에서 fallthrough 케이스에 대한 오류 보고 여부 */
+    "noUncheckedIndexedAccess": true,                    /* 인덱스 시그니처 결과에 'undefined' 포함 */
+
+    /* 상호 운용성 제약 */
+    "esModuleInterop": true,                             /* CommonJS 모듈을 ES 모듈처럼 가져올 수 있게 함 */
+    "allowSyntheticDefaultImports": true,                /* 기본 내보내기가 없는 모듈에서 기본 가져오기 허용 */
+    "forceConsistentCasingInFileNames": true,            /* 동일한 파일에 대한 일관되지 않은 대소문자 참조 허용하지 않음 */
+    "isolatedModules": true,                             /* 각 파일을 별도의 모듈로 트랜스파일 */
+    "verbatimModuleSyntax": true,                        /* 가져오기 및 내보내기 구문을 그대로 유지 */
+
+    /* 완전성 */
+    "skipLibCheck": true,                                /* 선언 파일의 타입 검사 건너뛰기 */
+    "skipDefaultLibCheck": true                          /* 기본 라이브러리 선언 파일의 타입 검사 건너뛰기 */
+  },
+  "include": ["src/**/*"],                               /* 컴파일에 포함할 파일 패턴 */
+  "exclude": ["node_modules", "dist", "**/*.spec.ts"]    /* 컴파일에서 제외할 파일 패턴 */
+}
