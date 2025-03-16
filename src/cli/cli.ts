@@ -51,10 +51,7 @@ const leftPanel = blessed.box({
   left: 0,
   width: `${layoutInfo.leftPanel.width}${layoutInfo.leftPanel.widthUnit}`,
   height: `100%-${layoutInfo.statusBar.height}`,
-  content: 'Left Panel',
-  style: {
-    bg: 'blue'
-  }
+  content: 'Left Panel'
 });
 
 const treePanel = blessedContrib.tree({
@@ -129,20 +126,23 @@ treePanel.setData({
 })
 //#endregion Tree dummy data
 
-// const setupTreePanelEvents = (tree: blessedContrib.Widgets.TreeElement) => {
-//   tree.on('select', (node) => {
-//     if (node.myCustomProperty) {
-//       console.log(node.myCustomProperty);
-//     }
-//     console.log(node.name);
-//   });
-// };
+const setupTreePanelEvents = (tree: blessedContrib.Widgets.TreeElement) => {
+  tree.on('select', (node) => {
+    if (node.myCustomProperty) {
+      screen.debug(`Selected node: ${node.name} (custom property: ${node.myCustomProperty})`);
+    }
+    screen.debug(`Selected node: ${node.name}`);
+  });
+};
 
 const systemMonitor = blessedContrib.line({
   top: '75%',
   left: 0,
   width: '100%',
-  height: '25%',
+  height: '27%',
+  border: {
+    type: 'line'
+  },
   style:
   {
     line: "yellow",
@@ -151,7 +151,7 @@ const systemMonitor = blessedContrib.line({
   },
   xLabelPadding: 0,
   xPadding: 0,
-  label: 'System Monitor',
+  label: ' System ',
   showLegend: true,
   wholeNumbersOnly: false //true=do not show fraction in y axis
 })
@@ -286,7 +286,7 @@ const main = async (): Promise<void> => {
 
   setupScreenEvents(screen);
   setupTextBoxEvents(mainTextBox); // 텍스트 박스 이벤트 설정
-  // setupTreePanelEvents(treePanel); // 트리 패널 이벤트 설정
+  setupTreePanelEvents(treePanel); // 트리 패널 이벤트 설정
 
   screen.title = 'Nurexia CLI';
   screen.append(leftPanel);
