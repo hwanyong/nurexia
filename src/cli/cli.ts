@@ -34,6 +34,82 @@ const screen = blessed.screen({
   debug: true
 });
 
+//#region Event Handlers
+// Configure screen event handlers
+const setupScreenEvents = (screen: blessed.Widgets.Screen): void => {
+  // Quit on Escape, q, or Control-C.
+  screen.key(['C-c'], () => {
+    process.exit(0);
+  });
+
+  // F10 key toggles the system monitor modal
+  screen.key(['f10'], () => {
+    toggleSystemMonitorModal();
+  });
+};
+//#endregion Event Handlers
+
+// Create a modal version of the system monitor that can be toggled
+const systemMonitorModal = blessedContrib.line({
+  top: 'center',
+  left: 'center',
+  width: 50,
+  height: 15,
+  border: {
+    type: 'line'
+  },
+  style: {
+    line: "yellow",
+    text: "green",
+    baseline: "black"
+  },
+  label: ' System Monitor ',
+  xLabelPadding: 3,
+  xPadding: 5,
+  showLegend: true,
+  wholeNumbersOnly: false,
+  // Make the modal draggable
+  draggable: true,
+  hidden: true // Hidden by default
+});
+
+//#region System Monitor dummy data
+const systemMonitorData = [{
+  title: 'CPU Usage',
+  x: ['t1', 't2', 't3', 't4'],
+  y: [5, 1, 7, 5],
+  style: {
+    line: 'red'
+  }
+}, {
+  title: 'Memory Usage',
+  x: ['t1', 't2', 't3', 't4'],
+  y: [2, 4, 9, 8],
+  style: { line: 'yellow' }
+}, {
+  title: 'Disk Usage',
+  x: ['t1', 't2', 't3', 't4'],
+  y: [22, 7, 12, 1],
+  style: { line: 'blue' }
+}]
+//#endregion System Monitor dummy data
+
+// Function to toggle the system monitor modal
+const toggleSystemMonitorModal = () => {
+  // Toggle visibility
+  systemMonitorModal.hidden = !systemMonitorModal.hidden;
+
+  // When shown, bring to front and set the latest data
+  if (!systemMonitorModal.hidden) {
+    systemMonitorModal.setFront();
+    systemMonitorModal.setData(systemMonitorData);
+    systemMonitorModal.focus();
+  }
+
+  screen.render();
+};
+
+
 const statusBar = blessed.box({
   bottom: 0,
   left: 0,
@@ -75,14 +151,7 @@ const treePanel = blessedContrib.tree({
         bg: 'white',
         fg: 'green'
       }
-    },
-    //   focus: {
-    //     border:
-    //     {
-    //       type: 'line',
-    //       fg: 'green'
-    //     }
-    //   }
+    }
   },
   scrollable: true
 });
@@ -126,7 +195,7 @@ treePanel.setData({
 })
 //#endregion Tree dummy data
 
-const setupTreePanelEvents = (tree: blessedContrib.Widgets.TreeElement) => {
+const setupTreePanelEvents = (tree: blessedContrib.Widgets.TreeElement, screen: blessed.Widgets.Screen) => {
   tree.on('select', (node) => {
     if (node.myCustomProperty) {
       screen.debug(`Selected node: ${node.name} (custom property: ${node.myCustomProperty})`);
@@ -135,46 +204,26 @@ const setupTreePanelEvents = (tree: blessedContrib.Widgets.TreeElement) => {
   });
 };
 
-const systemMonitor = blessedContrib.line({
+const contextPanel = blessed.box({
   top: '75%',
   left: 0,
   width: '100%',
   height: '27%',
   border: {
-    type: 'line'
+    type: 'line',
   },
-  style:
-  {
-    line: "yellow",
-    text: "green",
-    baseline: "black"
-  },
-  xLabelPadding: 0,
-  xPadding: 0,
-  label: ' System ',
-  showLegend: true,
-  wholeNumbersOnly: false //true=do not show fraction in y axis
-})
-//#region System Monitor dummy data
-const systemMonitorData = [{
-  title: 'CPU Usage',
-  x: ['t1', 't2', 't3', 't4'],
-  y: [5, 1, 7, 5],
-  style: {
-    line: 'red'
+  label: ' Context ',
+  scrollable: true,
+  alwaysScroll: true,
+  scrollbar: {
+    style: {
+      bg: 'white'
+    },
+    track: {
+      bg: 'gray'
+    }
   }
-}, {
-  title: 'Memory Usage',
-  x: ['t1', 't2', 't3', 't4'],
-  y: [2, 4, 9, 8],
-  style: { line: 'yellow' }
-}, {
-  title: 'Disk Usage',
-  x: ['t1', 't2', 't3', 't4'],
-  y: [22, 7, 12, 1],
-  style: { line: 'blue' }
-}]
-//#endregion System Monitor dummy data
+});
 
 const mainPanel = blessed.box({
   top: 0,
@@ -263,21 +312,30 @@ const rightPanel = blessed.box({
   right: 0,
   width: `${layoutInfo.rightPanel.width}${layoutInfo.rightPanel.widthUnit}`,
   height: `100%-${layoutInfo.statusBar.height}`,
-  content: 'Right Panel',
-  style: {
-    bg: 'red'
-  }
+  content: 'Right Panel'
 });
 
-//#region Event Handlers
-// Configure screen event handlers
-const setupScreenEvents = (screen: blessed.Widgets.Screen): void => {
-  // Quit on Escape, q, or Control-C.
-  screen.key(['C-c'], () => {
-    process.exit(0);
-  });
-};
-//#endregion Event Handlers
+const taskPanel = blessed.box({
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '50%',
+  border: {
+    type: 'line',
+  },
+  label: ' Task Panel '
+});
+
+const agentMapPanel = blessed.box({
+  top: '50%',
+  left: 0,
+  width: '100%',
+  height: '52%',
+  border: {
+    type: 'line',
+  },
+  label: ' Agent Map '
+});
 
 // CLI 진입점
 const main = async (): Promise<void> => {
@@ -286,19 +344,25 @@ const main = async (): Promise<void> => {
 
   setupScreenEvents(screen);
   setupTextBoxEvents(mainTextBox); // 텍스트 박스 이벤트 설정
-  setupTreePanelEvents(treePanel); // 트리 패널 이벤트 설정
+  setupTreePanelEvents(treePanel, screen); // 트리 패널 이벤트 설정
 
   screen.title = 'Nurexia CLI';
+
+  // Add the modal system monitor to screen
+  screen.append(systemMonitorModal);
+  systemMonitorModal.setData(systemMonitorData);
+
   screen.append(leftPanel);
   leftPanel.append(treePanel);
-  leftPanel.append(systemMonitor);
-  systemMonitor.setData(systemMonitorData);
+  leftPanel.append(contextPanel);
 
   screen.append(mainPanel);
   mainPanel.append(mainAgentBox);
   mainPanel.append(mainTextBox);
 
   screen.append(rightPanel);
+  rightPanel.append(taskPanel);
+  rightPanel.append(agentMapPanel);
 
   screen.append(statusBar);
 
