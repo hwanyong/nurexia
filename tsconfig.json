@@ -19,6 +19,7 @@
     "checkJs": false,                                    /* JavaScript 파일에 오류 보고 */
 
     /* 출력 설정 */
+    "rootDir": "./src",                                  /* 입력 파일의 루트 디렉토리 */
     "outDir": "./dist",                                  /* 출력 구조를 리디렉션할 디렉토리 */
     "removeComments": true ,                             /* 주석 제거 여부 */
     "sourceMap": true,                                   /* 소스맵 파일 생성 여부 */
