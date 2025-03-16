@@ -298,47 +298,20 @@ const setupTextBoxEvents = (textBox: blessed.Widgets.TextareaElement) => {
     newHeight = Math.max(newHeight, minTextBoxHeight);
 
     // 높이가 변경되었을 때만 업데이트
-    if (newHeight !== mainTextBoxHeight) {
-      mainTextBoxHeight = newHeight;
-      textBox.height = mainTextBoxHeight;
-      mainAgentBox.height = `100%-${mainTextBoxHeight}`;
-
-      // 화면을 다시 렌더링
-      screen.render();
-
-      // 커서를 맨 아래로 이동하고 스크롤 위치도 조정
-      setTimeout(() => {
-        // 스크롤 위치를 맨 아래로 조정
-        textBox.scrollTo(lineCount);
-
-        // 강제로 화면을 다시 렌더링하여 레이블 위치도 조정
-        screen.emit('resize');
-        screen.render();
-      }, 10);
+    if (newHeight == mainTextBoxHeight) {
+      return;
     }
+
+    // mainTextBoxHeight = newHeight;
+    textBox.height = newHeight;
+    mainAgentBox.height = `100%-${newHeight}`;
+    // 스크롤 위치를 맨 아래로 조정
+    textBox.scrollTo(lineCount);
+
+    // 강제로 화면을 다시 렌더링하여 레이블 위치도 조정
+    screen.emit('resize');
+    screen.render();
   });
-
-  // 포커스를 얻었을 때도 높이를 조정
-  // textBox.on('focus', () => {
-  //   const text = textBox.getValue();
-  //   const lineCount = text.split('\n').length;
-  //   let newHeight = Math.min(lineCount + 2, maxTextBoxHeight);
-  //   newHeight = Math.max(newHeight, minTextBoxHeight);
-
-  //   if (newHeight !== mainTextBoxHeight) {
-  //     mainTextBoxHeight = newHeight;
-  //     textBox.height = mainTextBoxHeight;
-  //     mainAgentBox.height = `100%-${mainTextBoxHeight}`;
-  //     screen.render();
-
-  //     // 스크롤 위치를 맨 아래로 조정
-  //     setTimeout(() => {
-  //       textBox.scrollTo(lineCount);
-  //       screen.emit('resize');
-  //       screen.render();
-  //     }, 10);
-  //   }
-  // });
 };
 
 const rightPanel = blessed.box({
