@@ -65,21 +65,17 @@ export interface ProgressBarOptions extends BoxOptions {
 // Interface for key events
 interface KeyEvent {
   name: string;
+  ctrl?: boolean;
+  shift?: boolean;
 }
 
 // Interface for position
-interface ScreenPosition {
+interface Coords {
   xi: number;
   xl: number;
   yi: number;
   yl: number;
-}
-
-// Interface for screen
-interface Screen {
-  render(): void;
-  fillRegion(attr: number, ch: string, xi: number, xl: number, yi: number, yl: number): void;
-  lines: any[];
+  [key: string]: any;
 }
 
 /**
@@ -94,11 +90,11 @@ export class ProgressBar extends Box {
   value: number = 0;
   pch: string;
   orientation: 'horizontal' | 'vertical';
-  screen: Screen;
-  iwidth: number;
-  iheight: number;
   content: string;
-  lpos?: ScreenPosition;
+
+  // Use declared properties instead of redefining
+  declare iwidth: number;
+  declare iheight: number;
 
   /**
    * ProgressBar constructor
@@ -157,7 +153,7 @@ export class ProgressBar extends Box {
         if (key.name === back[0] || (options.vi && key.name === back[1])) {
           this.progress(-5);
           if (this.screen) {
-            this.screen.render();
+            (this.screen as any).render();
           }
           return;
         }
@@ -165,7 +161,7 @@ export class ProgressBar extends Box {
         if (key.name === forward[0] || (options.vi && key.name === forward[1])) {
           this.progress(5);
           if (this.screen) {
-            this.screen.render();
+            (this.screen as any).render();
           }
           return;
         }
@@ -175,17 +171,18 @@ export class ProgressBar extends Box {
     // Handle mouse interaction
     if (options.mouse) {
       this.on('click', (data: { x: number, y: number }) => {
-        if (!this.lpos) return;
+        if (!(this as any).lpos) return;
 
+        const lpos = (this as any).lpos as Coords;
         let p: number;
 
         if (this.orientation === 'horizontal') {
-          const x = data.x - this.lpos.xi;
-          const m = (this.lpos.xl - this.lpos.xi) - this.iwidth;
+          const x = data.x - lpos.xi;
+          const m = (lpos.xl - lpos.xi) - this.iwidth;
           p = Math.floor(x / m * 100);
         } else {
-          const y = data.y - this.lpos.yi;
-          const m = (this.lpos.yl - this.lpos.yi) - this.iheight;
+          const y = data.y - lpos.yi;
+          const m = (lpos.yl - lpos.yi) - this.iheight;
           p = Math.floor(y / m * 100);
         }
 
@@ -197,9 +194,10 @@ export class ProgressBar extends Box {
   /**
    * Custom render method for progress bar
    */
-  render(): Position | undefined {
-    const ret = this._render();
-    if (!ret) return;
+  render(): any {
+    // Call base render method
+    const ret = (this as any)._render() as Coords;
+    if (!ret) return ret;
 
     let xi = ret.xi;
     let xl = ret.xl;
@@ -219,12 +217,13 @@ export class ProgressBar extends Box {
       yi = yi + Math.floor((yl - yi) - (((yl - yi) * (this.filled / 100))));
     }
 
-    const dattr = this.sattr(this.style.bar);
+    const dattr = (this as any).sattr(this.style.bar);
 
-    this.screen.fillRegion(dattr, this.pch, xi, xl, yi, yl);
+    (this.screen as any).fillRegion(dattr, this.pch, xi, xl, yi, yl);
 
     if (this.content) {
-      const line = this.screen.lines[yi];
+      const lines = (this.screen as any).lines;
+      const line = lines[yi];
       if (line) {
         for (let i = 0; i < this.content.length; i++) {
           if (line[xi + i]) {
