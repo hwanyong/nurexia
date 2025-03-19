@@ -5,9 +5,9 @@
  */
 
 import { ScrollableBox, ScrollableBoxOptions } from './scrollablebox';
+import { unicode } from '../utils/unicode';
 import { NodeType } from '../types';
 import { Program } from '../program/program';
-import { unicode } from '../utils/unicode';
 
 /**
  * Textarea options interface
@@ -17,15 +17,15 @@ export interface TextareaOptions extends ScrollableBoxOptions {
   inputOnFocus?: boolean;
   vi?: boolean;
   keys?: boolean;
+  // IME-related options
+  imeSupport?: boolean;
+  imeStyle?: 'underline' | 'highlight' | 'box';
 }
 
 /**
  * Textarea Class - Scrollable text input widget
  */
 export class Textarea extends ScrollableBox {
-  /**
-   * Textarea specific properties
-   */
   type: NodeType = 'textarea';
   value: string = '';
   _value: string = '';
@@ -37,106 +37,173 @@ export class Textarea extends ScrollableBox {
   __done?: () => void;
   ileft: number = 0;
 
-  /**
-   * Textarea constructor
-   */
-  constructor(options: TextareaOptions = {}) {
-    // 기본 옵션 설정
-    options.scrollable = options.scrollable !== false;
+  // IME composition state
+  private _isComposing: boolean = false;
+  private _compositionData: string = '';
+  private _compositionPosition: number = 0;
 
+  constructor(options: TextareaOptions = {}) {
+    options.scrollable = true;
     super(options);
 
-    // 값 초기화
     this.value = options.value || '';
+    this._value = this.value;
 
-    // 커서 업데이트 바인딩
-    this.__updateCursor = this._updateCursor.bind(this);
-    this.on('resize', this.__updateCursor);
-    this.on('move', this.__updateCursor);
-
-    // 입력 이벤트 처리
     if (options.inputOnFocus) {
       this.on('focus', () => this.readInput());
     }
 
+    // Only automatically read input if the
+    // `inputOnFocus` option was not explicitly set.
     if (!options.inputOnFocus && options.keys) {
-      this.on('keypress', (ch: string, key: any) => {
-        if (this._reading) return;
-        if (key.name === 'enter' || (options.vi && key.name === 'i')) {
-          return this.readInput();
-        }
-        if (key.name === 'e') {
-          return this.readEditor();
-        }
+      this.on('keypress', (ch, key) => {
+        this.setContent(this.value);
+        return this.readInput();
       });
     }
 
-    if (options.mouse) {
-      this.on('click', (data: any) => {
-        if (this._reading) return;
-        if (data.button !== 'right') return;
-        this.readEditor();
-      });
+    // Add IME composition event handlers
+    if (options.imeSupport !== false) {
+      this.screen.program.on('compositionstart', this._onCompositionStart.bind(this));
+      this.screen.program.on('compositionupdate', this._onCompositionUpdate.bind(this));
+      this.screen.program.on('compositionend', this._onCompositionEnd.bind(this));
     }
 
-    // Screen에 키 이벤트 리스너 등록
-    this.screen._listenKeys(this);
+    this.__updateCursor = this._updateCursor.bind(this);
+    this.on('resize', this.__updateCursor);
+    this.on('move', this.__updateCursor);
   }
 
   /**
-   * 문자열 너비 계산 (유니코드 지원)
+   * Calculate string width with support for wide characters
    */
   strWidth(str: string): number {
     return unicode.strWidth(str);
   }
 
   /**
-   * 커서 위치 업데이트
+   * Update cursor position for text input
    */
   _updateCursor(get?: boolean): void {
-    if (this.screen.focused !== this) {
+    if (this.screen.focused !== this || !this._reading) {
       return;
     }
 
-    const lpos = get ? this.lpos : this._getCoords();
+    const lpos = get ? this._getCoords() : this.lpos;
     if (!lpos) return;
 
-    let last = this._clines[this._clines.length - 1];
-    const program = this.screen.program as Program;
+    const last = this._clines[Math.max(0, this._clines.length - 1)];
+    const program = this.screen.program;
+    const line = last;
+    let cx = this.strWidth(line);
+    let cy = this._clines.length - 1;
 
-    // 마지막 라인이 비어있는 경우 처리
-    if (last === '' && this.value[this.value.length - 1] !== '\n') {
-      last = this._clines[this._clines.length - 2] || '';
-    }
+    // Add underline or other visual indicator for IME composition text
+    if (this._isComposing && this._compositionData) {
+      // Get position to insert composition
+      const beforeComp = this.value.slice(0, this._compositionPosition);
+      const beforeCompWidth = this.strWidth(beforeComp);
 
-    let line = Math.min(
-      this._clines.length - 1 - (this.childBase || 0),
-      (lpos.yl - lpos.yi) - this.iheight - 1
-    );
+      // Calculate composition text coordinates
+      const width = typeof this.width === 'number' ? this.width : 1;
+      let compX = beforeCompWidth % width;
+      let compY = Math.floor(beforeCompWidth / width);
 
-    // 음수가 되지 않도록 조정
-    line = Math.max(0, line);
+      // Adjust for scrolling
+      compY -= this.childBase;
 
-    const cy = lpos.yi + this.itop + line;
-    const cx = lpos.xi + this.ileft + this.strWidth(last);
+      // If composition is in visible area, highlight it
+      const height = typeof this.height === 'number' ? this.height : 0;
+      if (compY >= 0 && compY < height) {
+        const compWidth = this.strWidth(this._compositionData);
 
-    // 현재 위치와 같으면 이동하지 않음
-    if (cy === program.y && cx === program.x) {
-      return;
-    }
+        // Apply visual style based on options
+        const imeStyle = (this.options as TextareaOptions).imeStyle || 'underline';
 
-    // 커서 이동
-    if (cy === program.y) {
-      if (cx > program.x) {
-        program.right(cx - program.x);
-      } else if (cx < program.x) {
-        program.left(program.x - cx);
+        if (typeof lpos.yi === 'number' && typeof lpos.xi === 'number') {
+          switch (imeStyle) {
+            case 'underline':
+              // Draw underline for composition text
+              const basePos = lpos.yi + this.itop + compY;
+              const startPos = lpos.xi + this.ileft + compX;
+
+              program.cursorPos(startPos, basePos);
+              program.setStyle('{underline}');
+              program.write(this._compositionData);
+              program.resetStyle();
+              break;
+
+            case 'highlight':
+              // Highlight composition text
+              const hlPos = lpos.yi + this.itop + compY;
+              const hlStartPos = lpos.xi + this.ileft + compX;
+
+              program.cursorPos(hlStartPos, hlPos);
+              program.setStyle('{inverse}');
+              program.write(this._compositionData);
+              program.resetStyle();
+              break;
+
+            case 'box':
+              // Box around composition text
+              const boxPos = lpos.yi + this.itop + compY;
+              const boxStartPos = lpos.xi + this.ileft + compX;
+
+              program.cursorPos(boxStartPos - 1, boxPos);
+              program.write('[');
+              program.write(this._compositionData);
+              program.write(']');
+              break;
+          }
+        }
       }
-    } else if (cx === program.x) {
-      if (cy > program.y) {
-        program.down(cy - program.y);
-      } else if (cy < program.y) {
-        program.up(program.y - cy);
+    }
+
+    // Position cursor at end of text or at composition position
+    if (this._isComposing) {
+      // Position at composition
+      const beforeComp = this.value.slice(0, this._compositionPosition);
+      const textWithComp = beforeComp + this._compositionData;
+      const lines = this._clines;
+
+      // Find the line and column for cursor
+      let totalLines = 0;
+      let currentLine = '';
+      let currentWidth = 0;
+
+      for (let i = 0; i < textWithComp.length; i++) {
+        const ch = textWithComp[i];
+        const width = this.strWidth(ch);
+
+        const effectiveWidth = typeof this.width === 'number' ? this.width : 1;
+        if (currentWidth + width > effectiveWidth) {
+          totalLines++;
+          currentLine = ch;
+          currentWidth = width;
+        } else {
+          currentLine += ch;
+          currentWidth += width;
+        }
+      }
+
+      cy = totalLines;
+      cx = currentWidth;
+    } else {
+      // Regular cursor position at end of text
+      cx = this.strWidth(line);
+      cy = this._clines.length - 1;
+    }
+
+    // Position cursor
+    if (typeof lpos.yi === 'number' && typeof lpos.xi === 'number') {
+      const height = typeof this.height === 'number' ? this.height : 0;
+      if (cy + this.childBase < this.childBase + height) {
+        (program as any).cup(
+          lpos.yi + this.itop + cy - this.childBase,
+          lpos.xi + this.ileft + cx
+        );
+      } else {
+        (program as any).cup(cy, cx);
       }
     } else {
       (program as any).cup(cy, cx);
@@ -155,7 +222,7 @@ export class Textarea extends ScrollableBox {
     this._callback = callback;
 
     if (!focused) {
-      this.screen.saveFocus();
+      (this.screen as any).saveFocus();
       this.focus();
     }
 
@@ -189,11 +256,11 @@ export class Textarea extends ScrollableBox {
       this.screen.grabKeys = false;
 
       if (!focused) {
-        this.screen.restoreFocus();
+        (this.screen as any).restoreFocus();
       }
 
       if (this.options.inputOnFocus) {
-        this.screen.rewindFocus();
+        (this.screen as any).rewindFocus();
       }
 
       // Ugly
@@ -223,6 +290,9 @@ export class Textarea extends ScrollableBox {
 
     this.__done = this._done.bind(this, null, undefined);
     this.on('blur', this.__done as any);
+
+    // Ensure we clean up any IME composition state
+    this._endComposition();
   }
 
   /**
@@ -232,14 +302,21 @@ export class Textarea extends ScrollableBox {
     const done = this._done;
     const value = this.value;
 
+    // Skip key handling during composition except for enter, esc and special keys
+    if (key.isComposing && key.name !== 'return' && key.name !== 'escape' &&
+        key.name !== 'backspace' && !key.ctrl) {
+      return;
+    }
+
     if (key.name === 'return') return;
     if (key.name === 'enter') {
       ch = '\n';
     }
 
-    // TODO: Handle directional keys.
+    // Handle directional keys
     if (key.name === 'left' || key.name === 'right' ||
         key.name === 'up' || key.name === 'down') {
+      // TODO: Implement cursor movement within the text
       return;
     }
 
@@ -248,11 +325,14 @@ export class Textarea extends ScrollableBox {
     }
 
     if (key.name === 'escape') {
+      // Cancel any ongoing composition
+      this._endComposition();
+
       if (done) done(null, undefined);
     } else if (key.name === 'backspace') {
       if (this.value.length) {
         if (this.screen.fullUnicode) {
-          // 서로게이트 쌍 처리
+          // Handle surrogate pairs
           if (unicode.isSurrogate(this.value, this.value.length - 2)) {
             this.value = this.value.slice(0, -2);
           } else {
@@ -263,9 +343,14 @@ export class Textarea extends ScrollableBox {
         }
       }
     } else if (ch) {
-      // 제어 문자가 아닌 경우에만 추가
+      // Only add non-control characters
       if (!/^[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]$/.test(ch)) {
+        // Insert at cursor position or at the end
         this.value += ch;
+
+        // Update composition position if we're inserting text
+        // (for next composition)
+        this._compositionPosition = this.value.length;
       }
     }
 
@@ -377,7 +462,7 @@ export class Textarea extends ScrollableBox {
         }
         this.screen.render();
         this.readInput(callback);
-        return callback(err);
+        return callback && callback(err);
       }
       this.setValue(value);
       this.screen.render();
@@ -390,4 +475,62 @@ export class Textarea extends ScrollableBox {
    */
   setEditor = this.readEditor;
   editor = this.readEditor;
+
+  /**
+   * Handle IME composition start
+   */
+  private _onCompositionStart(data: string): void {
+    if (this.screen.focused !== this || !this._reading) return;
+
+    this._isComposing = true;
+    this._compositionData = data;
+    this._compositionPosition = this.value.length;
+
+    this.screen.render();
+  }
+
+  /**
+   * Handle IME composition update
+   */
+  private _onCompositionUpdate(data: string): void {
+    if (this.screen.focused !== this || !this._reading) return;
+
+    this._isComposing = true;
+    this._compositionData = data;
+
+    this.screen.render();
+  }
+
+  /**
+   * Handle IME composition end
+   */
+  private _onCompositionEnd(data: string): void {
+    if (this.screen.focused !== this || !this._reading) return;
+
+    // Add composition result to the value
+    if (data) {
+      this.value = this.value.slice(0, this._compositionPosition) +
+                  data +
+                  this.value.slice(this._compositionPosition);
+
+      // Update composition position for next composition
+      this._compositionPosition += data.length;
+    }
+
+    this._endComposition();
+    this.screen.render();
+  }
+
+  /**
+   * End composition and reset state
+   */
+  private _endComposition(): void {
+    // End any ongoing composition in the program
+    if (this._isComposing) {
+      this.screen.program.endComposition();
+    }
+
+    this._isComposing = false;
+    this._compositionData = '';
+  }
 }

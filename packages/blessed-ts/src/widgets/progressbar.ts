@@ -90,7 +90,7 @@ export class ProgressBar extends Box {
   value: number = 0;
   pch: string;
   orientation: 'horizontal' | 'vertical';
-  content: string;
+  content: string = '';
 
   // Use declared properties instead of redefining
   declare iwidth: number;

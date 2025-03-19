@@ -95,6 +95,9 @@ export class Screen extends Node {
   // Focused element
   focused: Element | null = null;
 
+  // Saved focus
+  private _savedFocus: Element | null = null;
+
   /**
    * Screen constructor
    */
@@ -276,5 +279,31 @@ export class Screen extends Node {
     }
 
     super.destroy();
+  }
+
+  /**
+   * Save current focus for later restoration
+   */
+  saveFocus(): this {
+    this._savedFocus = this.focused;
+    return this;
+  }
+
+  /**
+   * Restore saved focus
+   */
+  restoreFocus(): this {
+    if (this._savedFocus) {
+      this._savedFocus.focus();
+    }
+    return this;
+  }
+
+  /**
+   * Rewind focus by un-focusing
+   */
+  rewindFocus(): this {
+    this.focused = null;
+    return this;
   }
 }

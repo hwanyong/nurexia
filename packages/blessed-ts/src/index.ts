@@ -22,6 +22,9 @@ import { Form } from './widgets/form';
 import { FileManager } from './widgets/filemanager';
 import { Log } from './widgets/log';
 
+// 유틸리티
+import { bidi } from './utils/bidi';
+
 // 그래핌 분할기 - 한글 등 다국어 지원에 필요
 import GraphemeSplitter from 'grapheme-splitter';
 const splitter = new GraphemeSplitter();
@@ -78,5 +81,6 @@ export default {
   Form,
   FileManager,
   Log,
-  unicode
+  unicode,
+  bidi
 };

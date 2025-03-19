@@ -30,7 +30,7 @@ export interface TagResult {
  */
 export function merge<T extends object>(a: T, b: Partial<T>): T {
   Object.keys(b).forEach((key) => {
-    (a as any)[key] = b[key];
+    (a as any)[key] = (b as any)[key];
   });
   return a;
 }
@@ -171,10 +171,12 @@ export function generateTags(style?: Style, text?: string): string | TagResult {
  * Note: This function requires Element to have an sattr method,
  * which needs to be implemented in Element.
  */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export function attrToBinary(style: Style, element?: Element): number {
   // Fallback return value if sattr is not implemented yet
   return 0;
 }
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Strip all tags from text

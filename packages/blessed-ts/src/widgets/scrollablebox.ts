@@ -69,8 +69,8 @@ export class ScrollableBox extends Box {
   scrollable: boolean = true;
   childOffset: number = 0;
   childBase: number = 0;
-  baseLimit: number;
-  alwaysScroll: boolean;
+  baseLimit: number = 0;
+  alwaysScroll: boolean = false;
   scrollbar?: {
     ch: string;
     style: any;

@@ -16,6 +16,15 @@ export interface KeyEvent {
   code?: string;
   raw?: string;
   alt?: boolean;
+  // IME-related properties
+  isComposing?: boolean;
+  compositionData?: string;
+}
+
+// Add IME-specific events
+export interface IMECompositionEvent {
+  type: 'compositionstart' | 'compositionupdate' | 'compositionend';
+  data: string;
 }
 
 export interface KeyOptions {
@@ -55,6 +64,17 @@ export interface KeyOptions {
    * Unicode character range end
    */
   unicodeRangeEnd?: number;
+  /**
+   * Enable IME composition handling
+   */
+  enableIME?: boolean;
+}
+
+// IME composition states
+export enum IMECompositionState {
+  NONE = 'none',
+  COMPOSING = 'composing',
+  COMMIT = 'commit'
 }
 
 /**
@@ -78,9 +98,24 @@ export class Keys {
   private options: KeyOptions;
   private composing: boolean = false;
   private composedData: string = '';
+  private compositionState: IMECompositionState = IMECompositionState.NONE;
+
+  // Korean IME specific variables
+  private hangulState: {
+    isComposing: boolean;
+    buffer: string;
+    lastChar: string;
+  } = {
+    isComposing: false,
+    buffer: '',
+    lastChar: ''
+  };
 
   constructor(options: KeyOptions = {}) {
-    this.options = options;
+    this.options = {
+      enableIME: true,
+      ...options
+    };
   }
 
   /**
@@ -104,28 +139,162 @@ export class Keys {
   /**
    * Handle IME composing
    */
-  checkComposing(data: string): { data: string; skip: boolean } {
-    // Check for IME composing start/end
-    if (data === '\x1b') {
-      this.composing = true;
-      this.composedData = '';
-      return { data: '', skip: true };
+  checkComposing(data: string): { data: string; skip: boolean; event?: IMECompositionEvent } {
+    if (!this.options.enableIME) {
+      return { data, skip: false };
     }
 
+    // Check for IME composing start
+    if (data === '\x1b' && !this.composing) {
+      this.composing = true;
+      this.compositionState = IMECompositionState.COMPOSING;
+      this.composedData = '';
+
+      return {
+        data: '',
+        skip: true,
+        event: {
+          type: 'compositionstart',
+          data: ''
+        }
+      };
+    }
+
+    // Special sequences for IME
     if (this.composing) {
+      // ESC [ represents special IME sequence in some terminals
+      if (data === '[' && this.composedData === '') {
+        this.composedData += data;
+        return { data: '', skip: true };
+      }
+
+      // Handle Korean Hangul composition (specific to Korean IME)
+      if (this._isKoreanCharacter(data)) {
+        return this._handleKoreanIME(data);
+      }
+
+      // Handle composition end with space
       if (data === ' ') {
         // Composition complete
         const result = this.composedData;
         this.composing = false;
+        this.compositionState = IMECompositionState.COMMIT;
         this.composedData = '';
-        return { data: result, skip: false };
+
+        return {
+          data: result,
+          skip: false,
+          event: {
+            type: 'compositionend',
+            data: result
+          }
+        };
       }
 
+      // Add to composition buffer
       this.composedData += data;
-      return { data: '', skip: true };
+
+      return {
+        data: '',
+        skip: true,
+        event: {
+          type: 'compositionupdate',
+          data: this.composedData
+        }
+      };
     }
 
     return { data, skip: false };
+  }
+
+  /**
+   * Check if character is part of Korean Hangul
+   */
+  private _isKoreanCharacter(char: string): boolean {
+    const code = char.charCodeAt(0);
+    // Hangul Syllables and Hangul Jamo range
+    return (code >= 0xAC00 && code <= 0xD7A3) ||
+           (code >= 0x1100 && code <= 0x11FF) ||
+           (code >= 0x3130 && code <= 0x318F);
+  }
+
+  /**
+   * Handle Korean IME input specifically
+   */
+  private _handleKoreanIME(data: string): { data: string; skip: boolean; event?: IMECompositionEvent } {
+    // Start Korean composition if not already composing
+    if (!this.hangulState.isComposing) {
+      this.hangulState.isComposing = true;
+      this.hangulState.buffer = data;
+      this.hangulState.lastChar = data;
+
+      return {
+        data: '',
+        skip: true,
+        event: {
+          type: 'compositionupdate',
+          data: this.hangulState.buffer
+        }
+      };
+    }
+
+    // Continue Korean composition
+    this.hangulState.lastChar = data;
+    this.hangulState.buffer += data;
+
+    return {
+      data: '',
+      skip: true,
+      event: {
+        type: 'compositionupdate',
+        data: this.hangulState.buffer
+      }
+    };
+  }
+
+  /**
+   * Force end composition
+   */
+  endComposition(): string {
+    let result = '';
+
+    if (this.composing) {
+      result = this.composedData;
+      this.composing = false;
+      this.composedData = '';
+      this.compositionState = IMECompositionState.NONE;
+    }
+
+    if (this.hangulState.isComposing) {
+      result = this.hangulState.buffer;
+      this.hangulState.isComposing = false;
+      this.hangulState.buffer = '';
+      this.hangulState.lastChar = '';
+    }
+
+    return result;
+  }
+
+  /**
+   * Get current composition data
+   */
+  getCompositionData(): string {
+    if (this.composing) {
+      return this.composedData;
+    }
+
+    if (this.hangulState.isComposing) {
+      return this.hangulState.buffer;
+    }
+
+    return '';
+  }
+
+  /**
+   * Check if currently composing
+   */
+  isComposing(): boolean {
+    return this.composing || this.hangulState.isComposing;
   }
 
   /**

@@ -110,7 +110,7 @@ export class Node {
     element._emitter.on('*', (type: string, ...args: any[]) => {
       if (type === 'newListener' || type === 'removeListener') return;
       if (target.listeners(type).length > 0) {
-        target.emit.apply(target, [type, element].concat(args));
+        target.emit(type, element, ...args);
       }
     });
 

@@ -8,6 +8,7 @@ blessed-ts는 [blessed](https://github.com/chjj/blessed) 라이브러리를 Type
 
 - 타입 안전성 제공 (TypeScript 사용)
 - 다국어 및 비 ASCII 문자에 대한 향상된 지원
+- 양방향 텍스트 지원 (아랍어, 히브리어 등 RTL 언어)
 - 성능 최적화
 - 현대적인 코드베이스 및 API
 
@@ -55,6 +56,47 @@ const box = new blessedTs.Box({
 screen.key(['escape', 'q', 'C-c'], () => process.exit(0));
 
 // 스크린 렌더링
+screen.render();
+```
+
+## 양방향 텍스트 (RTL) 지원
+
+blessed-ts는 아랍어, 히브리어 등 오른쪽에서 왼쪽으로 쓰는 언어(RTL)를 위한 양방향 텍스트 처리를 지원합니다:
+
+```typescript
+import blessedTs, { Direction } from 'blessed-ts';
+
+// 스크린 생성
+const screen = new blessedTs.Screen({
+  smartCSR: true,
+  title: 'RTL Text Example'
+});
+
+// RTL 텍스트가 있는 박스 생성
+const box = new blessedTs.Box({
+  top: 'center',
+  left: 'center',
+  width: '50%',
+  height: '50%',
+  content: 'שלום (Hello in Hebrew)',
+  border: {
+    type: 'line'
+  },
+  style: {
+    border: {
+      fg: 'blue'
+    }
+  }
+});
+
+// 텍스트 방향 감지
+const direction = blessedTs.bidi.detectDirection(box.content);
+if (direction === Direction.RTL) {
+  // RTL 텍스트에 대한 처리
+  box.content = blessedTs.bidi.processBidiText(box.content);
+}
+
+screen.append(box);
 screen.render();
 ```
 

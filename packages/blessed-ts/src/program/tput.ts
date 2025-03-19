@@ -169,14 +169,33 @@ export class Tput {
   readTerminfo(term?: string): TerminfoData {
     term = term || this.terminal;
     const file = path.normalize(this._prefix(term));
-    const data = fs.readFileSync(file);
-    const info = this.parseTerminfo(data, file);
 
-    if (this.debug) {
-      this._terminfo = info;
+    try {
+      const data = fs.readFileSync(file);
+      const info = this.parseTerminfo(data, file);
+
+      if (this.debug) {
+        this._terminfo = info;
+      }
+
+      return info;
+    } catch (e) {
+      // Return a minimal default terminfo if file not found
+      if (this.debug) {
+        console.error(`Failed to read terminfo file: ${file}`, e);
+      }
+
+      // Return minimal default terminfo
+      return {
+        names: [term],
+        bools: [],
+        numbers: [],
+        strings: [],
+        extBools: [],
+        extNumbers: [],
+        extStrings: []
+      };
     }
-
-    return info;
   }
 
   /**

@@ -11,6 +11,7 @@ import * as util from 'util';
 import * as fs from 'fs';
 import { Tput } from './tput';
 import * as colors from '../utils/colors';
+import { Keys, KeyEvent, KeyOptions, IMECompositionEvent } from './keys';
 
 const nextTick = global.setImmediate || process.nextTick.bind(process);
 
@@ -83,6 +84,13 @@ export class Program extends EventEmitter {
   // Original write function
   private _originalWrite?: (data: string | Uint8Array) => boolean;
 
+  // Add Keys instance
+  private keys: Keys;
+
+  // Track IME composition state
+  private _imeComposing: boolean = false;
+  private _imeCompositionData: string = '';
+
   constructor(options: ProgramOptions = {}) {
     super();
 
@@ -131,6 +139,11 @@ export class Program extends EventEmitter {
     if (options.tput !== false) {
       this.setupTput();
     }
+
+    // Initialize Keys with appropriate options
+    this.keys = new Keys({
+      enableIME: true
+    });
 
     this.listen();
   }
@@ -339,34 +352,87 @@ export class Program extends EventEmitter {
    * Parse key input data
    */
   _parseKey(data: string): void {
-    // This implementation will be improved when we create keys.ts
-    // For now, basic key event emission
-    let key = {
-      name: '',
-      ctrl: false,
-      meta: false,
-      shift: false,
-      sequence: data
-    };
+    // Check for IME composition
+    const imeResult = this.keys.checkComposing(data);
 
-    // Handle special keys
-    if (data === '\r') {
-      key.name = 'return';
-    } else if (data === '\n') {
-      key.name = 'linefeed';
-    } else if (data === '\t') {
-      key.name = 'tab';
-    } else if (data === '\b' || data === '\x7f') {
-      key.name = 'backspace';
-    } else if (data === '\x1b') {
-      key.name = 'escape';
-    } else if (data === ' ') {
-      key.name = 'space';
-    } else if (data.length === 1) {
-      key.name = data;
+    // Handle IME composition events
+    if (imeResult.event) {
+      this._handleIMEEvent(imeResult.event);
     }
 
-    this.emit('keypress', data, key);
+    // Skip further processing if in IME composition mode
+    if (imeResult.skip) {
+      return;
+    }
+
+    // Process the data (possibly transformed by IME)
+    data = imeResult.data;
+
+    // Parse the key using Keys implementation
+    const key = this.keys.parseKey(data);
+
+    if (key) {
+      // Add IME composition state to the key event
+      key.isComposing = this._imeComposing;
+      key.compositionData = this._imeCompositionData;
+
+      // Emit the keypress event with the processed key
+      this.emit('keypress', data, key);
+    }
+  }
+
+  /**
+   * Handle IME composition events
+   */
+  private _handleIMEEvent(event: IMECompositionEvent): void {
+    switch (event.type) {
+      case 'compositionstart':
+        this._imeComposing = true;
+        this._imeCompositionData = '';
+        this.emit('compositionstart', event.data);
+        break;
+
+      case 'compositionupdate':
+        this._imeComposing = true;
+        this._imeCompositionData = event.data;
+        this.emit('compositionupdate', event.data);
+        break;
+
+      case 'compositionend':
+        this._imeComposing = false;
+        this._imeCompositionData = '';
+        this.emit('compositionend', event.data);
+        break;
+    }
+  }
+
+  /**
+   * Force end composition (useful when widget loses focus)
+   */
+  endComposition(): string {
+    const result = this.keys.endComposition();
+
+    if (this._imeComposing) {
+      this._imeComposing = false;
+      this._imeCompositionData = '';
+      this.emit('compositionend', result);
+    }
+
+    return result;
+  }
+
+  /**
+   * Check if currently in IME composition
+   */
+  isComposing(): boolean {
+    return this._imeComposing;
+  }
+
+  /**
+   * Get current IME composition data
+   */
+  getCompositionData(): string {
+    return this._imeCompositionData;
   }
 
   /**
@@ -551,5 +617,19 @@ export class Program extends EventEmitter {
    */
   beep(): boolean {
     return this._write('\x07');
+  }
+
+  /**
+   * Show cursor
+   */
+  showCursor(): boolean {
+    return this.cursor(true);
+  }
+
+  /**
+   * Hide cursor
+   */
+  hideCursor(): boolean {
+    return this.cursor(false);
   }
 }

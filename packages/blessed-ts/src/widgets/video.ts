@@ -30,9 +30,9 @@ export class Video extends Box {
   /**
    * Video-specific properties
    */
-  tty: Terminal;
-  now: number;
-  start: number;
+  tty!: Terminal;
+  now!: number;
+  start!: number;
 
   // Internal properties inherited from Box/Element
   declare iwidth: number;

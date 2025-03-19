@@ -54,7 +54,7 @@ export class Terminal extends Box {
   termName: string;
   term: any; // term.js instance
   pty: any;  // pty.js instance
-  _onData: (data: string | Buffer) => void;
+  _onData: (data: string | Buffer) => void = () => {};
   title?: string;
   dattr: number;
 
