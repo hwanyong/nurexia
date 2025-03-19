@@ -9,10 +9,20 @@
     "build": "tsc",
     "dev": "tsc --watch"
   },
-  "keywords": ["terminal", "tui", "ime", "multilingual", "unicode", "cli"],
+  "keywords": [
+    "terminal",
+    "tui",
+    "ime",
+    "multilingual",
+    "unicode",
+    "cli"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "grapheme-splitter": "^1.0.4"
+  },
+  "devDependencies": {
+    "blessed": "^0.1.81"
   }
 }

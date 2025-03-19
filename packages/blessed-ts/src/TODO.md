@@ -1,4 +1,5 @@
 # blessed-ts 마이그레이션 TODO 리스트
+[github](https://github.com/chjj/blessed/)
 
 이 문서는 JavaScript로 작성된 `blessed` 라이브러리를 TypeScript로 마이그레이션하기 위한 상세 TODO 리스트입니다.
 각 항목은 작업의 연속성을 고려해 순서대로 정렬되어 있습니다.
@@ -23,13 +24,13 @@
 
 ## 3. 유틸리티 모듈 구현
 
-- [ ] `unicode.js` → `utils/unicode.ts` 마이그레이션
-  - [ ] East Asian Width (EAW) 계산 함수 구현
-  - [ ] 유니코드 문자 분류 함수 구현
-  - [ ] 문자 너비 계산 기능 개선 (그래핌 단위 지원)
-- [ ] `colors.js` → `utils/colors.ts` 마이그레이션
-  - [ ] 색상 변환 함수 구현
-  - [ ] 테마 관련 기능 구현
+- [x] `unicode.js` → `utils/unicode.ts` 마이그레이션
+  - [x] East Asian Width (EAW) 계산 함수 구현
+  - [x] 유니코드 문자 분류 함수 구현
+  - [x] 문자 너비 계산 기능 개선 (그래핌 단위 지원)
+- [x] `colors.js` → `utils/colors.ts` 마이그레이션
+  - [x] 색상 변환 함수 구현
+  - [x] 테마 관련 기능 구현
 - [ ] `helpers.js` → `helpers/index.ts` 마이그레이션
   - [ ] 문자열 처리 헬퍼 함수 타입 안전하게 구현
   - [ ] 객체 및 배열 처리 유틸리티 함수 구현

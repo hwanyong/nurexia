@@ -24,14 +24,24 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4
 
+  packages/blessed-ts:
+    dependencies:
+      grapheme-splitter:
+        specifier: ^1.0.4
+        version: 1.0.4
+    devDependencies:
+      blessed:
+        specifier: ^0.1.81
+        version: 0.1.81
+
   packages/cli:
     dependencies:
       blessed-contrib:
         specifier: ^4.11.0
         version: 4.11.0
-      blessed-extended:
+      blessed-ts:
         specifier: workspace:*
-        version: link:../blessed-extended
+        version: link:../blessed-ts
       cli-progress:
         specifier: ^3.12.0
         version: 3.12.0
