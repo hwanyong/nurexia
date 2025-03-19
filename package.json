@@ -2,21 +2,21 @@
   "name": "nurexia",
   "version": "0.1.0",
   "description": "",
-  "main": "dist/cli/index.js",
-  "types": "dist/cli/index.d.ts",
+  "main": "dist/cli/cli.js",
+  "types": "dist/cli/cli.d.ts",
   "type": "module",
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "start": "node dist/cli/index.js",
-    "debug:cli": "node --loader ts-node/esm src/cli/index.ts",
-    "debug:dist": "node --inspect dist/cli/index.js"
+    "start": "node dist/cli/cli.js",
+    "debug:cli": "node --loader ts-node/esm src/cli/cli.ts",
+    "debug:dist": "node --inspect dist/cli/cli.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bin": {
-    "nrx": "./dist/cli/index.js"
+    "nrx": "./dist/cli/cli.js"
   },
   "dependencies": {
     "@types/blessed": "^0.1.25",
