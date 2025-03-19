@@ -290,4 +290,38 @@ export class Node {
   getData(key: string): any {
     return this.data[key];
   }
+
+  /**
+   * Execute a function for each descendant node
+   * @param fn The function to execute for each descendant
+   * @returns boolean indicating if traversal was stopped early
+   */
+  forDescendants(fn: (el: Node) => boolean | void): boolean {
+    let stopped = false;
+
+    const iterate = (node: Node): boolean => {
+      for (let i = 0; i < node.children.length; i++) {
+        const child = node.children[i];
+
+        // Call the function for this child
+        const ret = fn(child);
+
+        // If the function returned false, stop traversal
+        if (ret === false) {
+          stopped = true;
+          return false;
+        }
+
+        // Traverse this child's descendants
+        if (iterate(child) === false) {
+          return false;
+        }
+      }
+
+      return true;
+    };
+
+    iterate(this);
+    return !stopped;
+  }
 }

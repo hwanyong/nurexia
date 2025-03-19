@@ -105,36 +105,36 @@
   - [x] 텍스트 편집 기능 구현
   - [x] IME 입력 지원 개선
   - [x] 다국어 입력 처리 개선
-- [ ] `textbox.js` → `widgets/textbox.ts` 마이그레이션
-  - [ ] TextBox 클래스 구현 (Textarea 확장)
-- [ ] `button.js` → `widgets/button.ts` 마이그레이션
-  - [ ] Button 클래스 구현 (Box 확장)
-- [ ] `checkbox.js` → `widgets/checkbox.ts` 마이그레이션
-  - [ ] Checkbox 클래스 구현 (Box 확장)
-- [ ] `radiobutton.js` → `widgets/radiobutton.ts` 마이그레이션
-  - [ ] RadioButton 클래스 구현 (Box 확장)
-- [ ] `radioset.js` → `widgets/radioset.ts` 마이그레이션
-  - [ ] RadioSet 클래스 구현 (Box 확장)
+- [x] `textbox.js` → `widgets/textbox.ts` 마이그레이션
+  - [x] TextBox 클래스 구현 (Textarea 확장)
+- [x] `button.js` → `widgets/button.ts` 마이그레이션
+  - [x] Button 클래스 구현 (Box 확장)
+- [x] `checkbox.js` → `widgets/checkbox.ts` 마이그레이션
+  - [x] Checkbox 클래스 구현 (Input 확장)
+- [x] `radiobutton.js` → `widgets/radiobutton.ts` 마이그레이션
+  - [x] RadioButton 클래스 구현 (Checkbox 확장)
+- [x] `radioset.js` → `widgets/radioset.ts` 마이그레이션
+  - [x] RadioSet 클래스 구현 (Box 확장)
 
 ## 8. 데이터 표시 위젯 구현
 
-- [ ] `text.js` → `widgets/text.ts` 마이그레이션
-  - [ ] Text 클래스 구현 (Box 확장)
-  - [ ] 다국어 텍스트 렌더링 개선
-- [ ] `table.js` → `widgets/table.ts` 마이그레이션
-  - [ ] Table 클래스 구현 (Box 확장)
-  - [ ] 테이블 셀 및 행 관리 구현
-- [ ] `listtable.js` → `widgets/listtable.ts` 마이그레이션
-  - [ ] ListTable 클래스 구현 (List 확장)
-- [ ] `line.js` → `widgets/line.ts` 마이그레이션
-  - [ ] Line 클래스 구현 (Box 확장)
-- [ ] `progressbar.js` → `widgets/progressbar.ts` 마이그레이션
-  - [ ] ProgressBar 클래스 구현 (Box 확장)
+- [x] `text.js` → `widgets/text.ts` 마이그레이션
+  - [x] Text 클래스 구현 (Box 확장)
+  - [x] 다국어 텍스트 렌더링 개선
+- [x] `table.js` → `widgets/table.ts` 마이그레이션
+  - [x] Table 클래스 구현 (Box 확장)
+  - [x] 테이블 셀 및 행 관리 구현
+- [x] `listtable.js` → `widgets/listtable.ts` 마이그레이션
+  - [x] ListTable 클래스 구현 (List 확장)
+- [x] `line.js` → `widgets/line.ts` 마이그레이션
+  - [x] Line 클래스 구현 (Box 확장)
+- [x] `progressbar.js` → `widgets/progressbar.ts` 마이그레이션
+  - [x] ProgressBar 클래스 구현 (Box 확장)
 
 ## 9. 대화상자 및 메시지 위젯 구현
 
-- [ ] `message.js` → `widgets/message.ts` 마이그레이션
-  - [ ] Message 클래스 구현 (Box 확장)
+- [x] `message.js` → `widgets/message.ts` 마이그레이션
+  - [x] Message 클래스 구현 (Box 확장)
 - [ ] `question.js` → `widgets/question.ts` 마이그레이션
   - [ ] Question 클래스 구현 (Box 확장)
 - [ ] `prompt.js` → `widgets/prompt.ts` 마이그레이션
@@ -259,11 +259,14 @@
    - `form.ts`: Form 클래스 구현 완료
    - `textarea.ts`: Textarea 클래스 구현 완료
    - `input.ts`: Input 클래스 구현 완료
+   - `textbox.ts`: TextBox 클래스 구현 완료
+   - `button.ts`: Button 클래스 구현 완료
 
 ### 다음 작업 예정
-1. 입력 관련 위젯 추가 구현
-   - `textbox.ts`: TextBox 클래스 구현 (Textarea 확장)
-   - `button.ts`: Button 클래스 구현 (Box 확장)
+1. 데이터 표시 위젯 구현 (계속)
+   - `listtable.ts`: ListTable 클래스 구현 (List 확장)
+   - `line.ts`: Line 클래스 구현 (Box 확장)
+   - `progressbar.ts`: ProgressBar 클래스 구현 (Box 확장)
 
 ## 노트
 

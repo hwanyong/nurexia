@@ -20,6 +20,10 @@ export interface Border {
   ch?: string;
   bg?: Color;
   fg?: Color;
+  top?: boolean;
+  bottom?: boolean;
+  left?: boolean;
+  right?: boolean;
 }
 
 /**
@@ -35,6 +39,22 @@ export interface Style {
   invisible?: boolean;
   transparent?: boolean;
   border?: Border;
+  header?: {
+    fg?: Color;
+    bg?: Color;
+    bold?: boolean;
+    underline?: boolean;
+    inverse?: boolean;
+    invisible?: boolean;
+  };
+  cell?: {
+    fg?: Color;
+    bg?: Color;
+    bold?: boolean;
+    underline?: boolean;
+    inverse?: boolean;
+    invisible?: boolean;
+  };
   scrollbar?: {
     fg?: Color;
     bg?: Color;
@@ -67,6 +87,14 @@ export interface Style {
     inverse?: boolean;
     invisible?: boolean;
   };
+  bar?: {
+    fg?: Color;
+    bg?: Color;
+    bold?: boolean;
+    underline?: boolean;
+    inverse?: boolean;
+    invisible?: boolean;
+  };
 }
 
 /**
@@ -77,7 +105,7 @@ export type Position = number | string | 'center';
 /**
  * 노드 타입
  */
-export type NodeType = 'node' | 'element' | 'screen' | 'box' | 'scrollable-box' | 'scrollable-text' | 'text' | 'list' | 'form' | 'input' | 'textarea' | 'listbar';
+export type NodeType = 'node' | 'element' | 'screen' | 'box' | 'scrollable-box' | 'scrollable-text' | 'text' | 'list' | 'form' | 'input' | 'textarea' | 'listbar' | 'textbox' | 'button' | 'checkbox' | 'radio-button' | 'radio-set' | 'table' | 'list-table' | 'line' | 'progress-bar' | 'message';
 
 /**
  * 기본 위젯 옵션 인터페이스
