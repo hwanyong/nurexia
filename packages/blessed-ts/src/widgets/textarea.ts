@@ -8,7 +8,6 @@ import { ScrollableBox, ScrollableBoxOptions } from './scrollablebox';
 import { NodeType } from '../types';
 import { Program } from '../program/program';
 import { unicode } from '../utils/unicode';
-import { IMEHandler, IMEComposition } from '../utils/ime';
 
 /**
  * Textarea options interface
@@ -18,7 +17,6 @@ export interface TextareaOptions extends ScrollableBoxOptions {
   inputOnFocus?: boolean;
   vi?: boolean;
   keys?: boolean;
-  imeSupport?: boolean;  // Enable IME support
 }
 
 /**
@@ -39,11 +37,6 @@ export class Textarea extends ScrollableBox {
   __done?: () => void;
   ileft: number = 0;
 
-  // IME related properties
-  _ime: IMEHandler;
-  _imeComposition: IMEComposition;
-  _imeSupport: boolean = true;
-
   /**
    * Textarea constructor
    */
@@ -55,18 +48,6 @@ export class Textarea extends ScrollableBox {
 
     // 값 초기화
     this.value = options.value || '';
-
-    // IME 설정
-    this._ime = new IMEHandler();
-    this._imeComposition = this._ime.composition;
-    this._imeSupport = options.imeSupport !== false;
-
-    // IME 이벤트 설정
-    this._ime.onChange((composition) => {
-      this._imeComposition = composition;
-      this._updateCursor();
-      this.screen.render();
-    });
 
     // 커서 업데이트 바인딩
     this.__updateCursor = this._updateCursor.bind(this);
@@ -120,18 +101,8 @@ export class Textarea extends ScrollableBox {
     const lpos = get ? this.lpos : this._getCoords();
     if (!lpos) return;
 
-    // Get last line and handle IME composition if active
     let last = this._clines[this._clines.length - 1];
     const program = this.screen.program as Program;
-
-    // Handle IME composition display
-    let compositionText = '';
-    let cursorOffset = 0;
-
-    if (this._imeSupport && this._imeComposition.isComposing) {
-      compositionText = this._imeComposition.text;
-      cursorOffset = this.strWidth(compositionText.substring(0, this._imeComposition.cursor));
-    }
 
     // 마지막 라인이 비어있는 경우 처리
     if (last === '' && this.value[this.value.length - 1] !== '\n') {
@@ -147,12 +118,7 @@ export class Textarea extends ScrollableBox {
     line = Math.max(0, line);
 
     const cy = lpos.yi + this.itop + line;
-    let cx = lpos.xi + this.ileft + this.strWidth(last);
-
-    // Adjust cursor position for IME composition text
-    if (this._imeSupport && this._imeComposition.isComposing) {
-      cx = lpos.xi + this.ileft + this.strWidth(last) + cursorOffset;
-    }
+    const cx = lpos.xi + this.ileft + this.strWidth(last);
 
     // 현재 위치와 같으면 이동하지 않음
     if (cy === program.y && cx === program.x) {
@@ -205,15 +171,6 @@ export class Textarea extends ScrollableBox {
       (this._done as any).done = true;
 
       this._reading = false;
-
-      // Ensure any IME composition is completed
-      if (this._imeComposition.isComposing) {
-        const composedText = this._ime.commit();
-        if (composedText && !err) {
-          // Insert the composed text
-          this.value += composedText;
-        }
-      }
 
       delete this._callback;
       delete this._done;
@@ -275,32 +232,6 @@ export class Textarea extends ScrollableBox {
     const done = this._done;
     const value = this.value;
 
-    // Check for IME input first if IME support is enabled
-    if (this._imeSupport && (this._imeComposition.isComposing ||
-        (ch && /[\u1100-\u11FF\u3040-\u30FF\u3130-\u318F\uAC00-\uD7AF\u4E00-\u9FFF]/.test(ch)))) {
-
-      // If it's the first character of a potential IME sequence, start composition
-      if (!this._imeComposition.isComposing) {
-        this._ime.start(ch);
-        this.screen.render();
-        return;
-      }
-
-      // Process key within IME composition
-      if (this._ime.processKey(ch, key)) {
-        this.screen.render();
-        return;
-      }
-
-      // If composition is active and Enter is pressed, commit the text
-      if (key.name === 'enter' || key.name === 'return') {
-        const composedText = this._ime.commit();
-        this.value += composedText;
-        this.screen.render();
-        return;
-      }
-    }
-
     if (key.name === 'return') return;
     if (key.name === 'enter') {
       ch = '\n';
@@ -317,61 +248,45 @@ export class Textarea extends ScrollableBox {
     }
 
     if (key.name === 'escape') {
-      if (this._imeComposition.isComposing) {
-        this._ime.cancel();
-        this.screen.render();
-        return;
-      }
-      if (done) {
-        done(null, undefined);
-      }
-      return;
-    }
-
-    if (key.name === 'backspace') {
-      if (this.value) {
-        if (this.value[this.value.length - 1] === '\n') {
-          this.value = this.value.slice(0, -1);
-        } else {
-          // Remove the last character based on grapheme clusters
-          // Get the string without the last character, respecting Unicode
-          const strLen = this.value.length;
-          // For non-ASCII characters, we need to handle surrogate pairs and combining marks
-          let indexToSlice = strLen - 1;
-          // Check for surrogate pairs
-          if (strLen >= 2 && unicode.isSurrogate(this.value, strLen - 2)) {
-            indexToSlice = strLen - 2;
+      if (done) done(null, undefined);
+    } else if (key.name === 'backspace') {
+      if (this.value.length) {
+        if (this.screen.fullUnicode) {
+          // 서로게이트 쌍 처리
+          if (unicode.isSurrogate(this.value, this.value.length - 2)) {
+            this.value = this.value.slice(0, -2);
+          } else {
+            this.value = this.value.slice(0, -1);
           }
-          this.value = this.value.substring(0, indexToSlice);
+        } else {
+          this.value = this.value.slice(0, -1);
         }
       }
-      this.screen.render();
-      return;
+    } else if (ch) {
+      // 제어 문자가 아닌 경우에만 추가
+      if (!/^[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]$/.test(ch)) {
+        this.value += ch;
+      }
     }
 
-    if (ch) {
-      this.value += ch;
+    if (this.value !== value) {
       this.screen.render();
     }
   }
 
   /**
-   * 스크롤 처리
+   * 타이핑 시 스크롤 조정
    */
   _typeScroll(): void {
-    // Calculate visible rows and scroll if needed
-    const height = typeof this.height === 'number' ? this.height : 0;
-    const visible = Math.min(
-      this._clines.length - (this.childBase || 0),
-      height - (this.iheight || 0)
-    );
-    if (this._clines.length > visible) {
+    // 마지막 라인이 보이도록 스크롤 조정
+    const height = (typeof this.height === 'number' ? this.height : 0) - (this.iheight || 0);
+    if (this._clines.length - this.childBase > height) {
       this.scroll(this._clines.length);
     }
   }
 
   /**
-   * 현재 값 반환
+   * 값 가져오기
    */
   getValue(): string {
     return this.value;
@@ -381,12 +296,15 @@ export class Textarea extends ScrollableBox {
    * 값 설정
    */
   setValue(value?: string): this {
-    if (value == null) value = this.value;
+    if (value == null) {
+      value = this.value;
+    }
     if (this._value !== value) {
       this.value = value;
       this._value = value;
+      this.setContent(this.value);
       this._typeScroll();
-      this.screen.render();
+      this._updateCursor();
     }
     return this;
   }
@@ -399,74 +317,34 @@ export class Textarea extends ScrollableBox {
   }
 
   /**
-   * 입력 지우기 별칭
+   * 별칭: clearValue
    */
   clearInput = this.clearValue;
 
   /**
-   * 입력 제출
+   * 현재 입력 제출
    */
   submit(): void {
-    if (!this._reading) return;
-    const done = this._done;
-    if (done) done(null, this.value);
+    if (this.__listener) {
+      this.__listener('\x1b', { name: 'escape' });
+    }
   }
 
   /**
-   * 입력 취소
+   * 현재 입력 취소
    */
   cancel(): void {
-    if (!this._reading) return;
-    const done = this._done;
-    if (done) done(null, undefined);
+    if (this.__listener) {
+      this.__listener('\x1b', { name: 'escape' });
+    }
   }
 
   /**
    * 렌더링
    */
   render(): { width: number; height: number } {
-    const result = super.render();
-
-    // Render IME composition text if active
-    if (this._imeSupport && this._imeComposition.isComposing && this.screen.focused === this) {
-      const lpos = this._getCoords();
-      if (!lpos) return result;
-
-      // Determine where to render the composition text
-      let lastLine = this._clines[this._clines.length - 1] || '';
-      let compositionX = this.ileft + this.strWidth(lastLine);
-      let compositionY = Math.min(
-        this._clines.length - 1 - (this.childBase || 0),
-        (lpos.yl - lpos.yi) - this.iheight - 1
-      );
-
-      // Adjust y position to avoid negative values
-      compositionY = Math.max(0, compositionY);
-
-      // Get the composition text to display
-      const compositionText = this._imeComposition.text;
-
-      // Render the composition with underline to indicate it's being composed
-      if (compositionText) {
-        this.screen.fills.push({
-          screen: this.screen,
-          left: lpos.xi + compositionX,
-          top: lpos.yi + this.itop + compositionY,
-          text: compositionText,
-          style: {
-            bold: false,
-            underline: true,
-            blink: false,
-            inverse: false,
-            invisible: false,
-            bg: this.style.bg,
-            fg: this.style.fg || 'white'
-          }
-        });
-      }
-    }
-
-    return result;
+    this.setValue();
+    return super.render();
   }
 
   /**
@@ -508,7 +386,7 @@ export class Textarea extends ScrollableBox {
   }
 
   /**
-   * 에디터 설정 별칭
+   * 별칭: readEditor
    */
   setEditor = this.readEditor;
   editor = this.readEditor;

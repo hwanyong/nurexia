@@ -1,58 +1,43 @@
 # blessed-ts
 
-A TypeScript implementation of the [blessed](https://github.com/chjj/blessed) terminal interface library with improved IME and multilingual support.
+TypeScript 기반 터미널 UI 라이브러리 with 향상된 다국어 지원
 
-## Features
+## 소개
 
-- Complete TypeScript conversion of the blessed library
-- Full type safety and IntelliSense support
-- Enhanced IME (Input Method Editor) support for Asian languages
-- Improved multilingual text rendering
-- Unicode handling with proper grapheme cluster support
-- Modern codebase with ES modules
+blessed-ts는 [blessed](https://github.com/chjj/blessed) 라이브러리를 TypeScript로 재구현한 버전입니다. 주요 목표는 다음과 같습니다:
 
-## IME Support
+- 타입 안전성 제공 (TypeScript 사용)
+- 다국어 및 비 ASCII 문자에 대한 향상된 지원
+- 성능 최적화
+- 현대적인 코드베이스 및 API
 
-This library includes enhanced IME support for languages that require composition-based input methods:
-
-- **Korean (한글)**: Full support for Hangul composition
-- **Japanese (日本語)**: Support for Hiragana, Katakana, and Kanji input
-- **Chinese (中文)**: Support for both Simplified and Traditional Chinese input
-- **Other languages**: Better support for other non-Latin scripts
-
-Features of the IME implementation:
-
-- Visual feedback during composition
-- Proper cursor positioning within composed text
-- Underline style for text being composed
-- Support for composition cancellation and editing
-
-## Installation
+## 설치
 
 ```bash
 npm install blessed-ts
 ```
 
-## Basic Usage
+## 기본 사용법
+
+간단한 Hello World 예제:
 
 ```typescript
-import { Screen, Box, Text } from 'blessed-ts';
+import blessedTs from 'blessed-ts';
 
-// Create a screen
-const screen = new Screen({
+// 스크린 생성
+const screen = new blessedTs.Screen({
   smartCSR: true,
-  title: 'blessed-ts example',
-  fullUnicode: true,
+  title: 'blessed-ts example'
 });
 
-// Create a box
-const box = new Box({
+// 박스 생성
+const box = new blessedTs.Box({
   parent: screen,
   top: 'center',
   left: 'center',
   width: '50%',
   height: '50%',
-  content: 'Hello, world!',
+  content: '안녕하세요! Hello, world!',
   tags: true,
   border: {
     type: 'line'
@@ -66,30 +51,44 @@ const box = new Box({
   }
 });
 
-// Quit on Escape, q, or Ctrl+C
+// 종료 키 설정
 screen.key(['escape', 'q', 'C-c'], () => process.exit(0));
 
-// Render the screen
+// 스크린 렌더링
 screen.render();
 ```
 
-## IME Input Example
+## 주요 컴포넌트
 
-To see the IME input support in action:
+### 기본 위젯
 
-```bash
-npm run start:ime-example
-```
+- `Screen`: 모든 요소의 컨테이너
+- `Box`: 기본 컨테이너 요소
+- `Text`: 텍스트 표시 요소
+- `List`: 목록 표시 및 상호작용 요소
+- `Textarea`: 텍스트 입력 요소
 
-This example demonstrates:
-- Real-time IME composition feedback
-- Support for Korean, Japanese, and Chinese input
-- Proper rendering of multilingual text
+### 다국어 지원
 
-## Documentation
+blessed-ts는 다음과 같은 문자 집합에 대한 향상된 지원을 제공합니다:
 
-For detailed API documentation, see the [Wiki](https://github.com/your-username/blessed-ts/wiki).
+- 한글, 한자, 일본어 등 동아시아 문자
+- 결합 문자 (악센트 표시 등)
+- 이모지
+- 기타 비 라틴 문자
 
-## License
+문자 너비 계산, 위치 조정, 스크롤 등의 기능이 다국어 문자에 맞게 최적화되어 있습니다.
 
-MIT
+### 성능 최적화
+
+- 효율적인 렌더링 알고리즘
+- 메모리 사용량 최적화
+- 터미널 업데이트 최소화
+
+## 프로젝트 상태
+
+현재 이 프로젝트는 개발 초기 단계입니다. [TODO 리스트](./src/TODO.md)를 참조하여 현재 구현 상태와 향후 계획을 확인할 수 있습니다.
+
+## 라이센스
+
+ISC

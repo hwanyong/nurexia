@@ -153,8 +153,8 @@
   - [x] ANSIImage 클래스 구현 (Box 확장)
 - [x] `overlayimage.js` → `widgets/overlayimage.ts` 마이그레이션
   - [x] OverlayImage 클래스 구현 (Box 확장)
-- [ ] `video.js` → `widgets/video.ts` 마이그레이션 (필요시)
-  - [ ] Video 클래스 구현 (Box 확장)
+- [x] `video.js` → `widgets/video.ts` 마이그레이션 (필요시)
+  - [x] Video 클래스 구현 (Box 확장)
 - [x] `bigtext.js` → `widgets/bigtext.ts` 마이그레이션
   - [x] BigText 클래스 구현 (Box 확장)
 - [x] `filemanager.js` → `widgets/filemanager.ts` 마이그레이션
@@ -170,9 +170,9 @@
 
 ## 12. 다국어 및 IME 지원 개선
 
-- [x] IME 입력 처리 메커니즘 구현
-  - [x] 한글, 중국어, 일본어 등 조합형 문자 입력 지원
-  - [x] 입력 중인 조합 문자 시각화
+- [ ] IME 입력 처리 메커니즘 구현
+  - [ ] 한글, 중국어, 일본어 등 조합형 문자 입력 지원
+  - [ ] 입력 중인 조합 문자 시각화
 - [ ] 유니코드 문자 너비 계산 개선
   - [ ] East Asian Width (EAW) 특성 지원
   - [ ] 결합 문자 및 이모지 지원
@@ -291,13 +291,10 @@
    - [x] `layout.ts`: Layout 클래스 구현 완료
 
 ### 다음 작업 예정
-1. 특수 위젯 구현
-   - [ ] `video.ts`: Video 클래스 구현 (필요시)
-
-2. 다국어 및 IME 지원 개선
-   - [x] IME 입력 처리 메커니즘 구현
-   - [x] 한글, 중국어, 일본어 등 조합형 문자 입력 지원
-   - [x] 입력 중인 조합 문자 시각화
+1. 다국어 및 IME 지원 개선
+   - [ ] IME 입력 처리 메커니즘 구현
+   - [ ] 한글, 중국어, 일본어 등 조합형 문자 입력 지원
+   - [ ] 입력 중인 조합 문자 시각화
 
 ## 노트
 
