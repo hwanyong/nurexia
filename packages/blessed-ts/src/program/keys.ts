@@ -105,23 +105,54 @@ export class Keys {
    * Handle IME composing
    */
   checkComposing(data: string): { data: string; skip: boolean } {
-    // Check for IME composing start/end
+    // Special IME sequences - Different patterns based on terminal/OS combinations
+
+    // Check for IME composing start/end indicators
     if (data === '\x1b') {
       this.composing = true;
       this.composedData = '';
       return { data: '', skip: true };
     }
 
+    // Detect IME sequence patterns
+    // These patterns vary by language and IME implementation
+
+    // Korean (Hangul) IME patterns
+    const isHangulJamo = /[\u1100-\u11FF]/.test(data);
+    const isHangulSyllable = /[\uAC00-\uD7A3]/.test(data);
+
+    // Chinese/Japanese IME patterns
+    const isIdeographicSpace = data === '\u3000';
+    const isKanaOrIdeograph = /[\u3040-\u30FF\u4E00-\u9FFF]/.test(data);
+
+    // Combined check for IME-related characters
+    const isIMERelated = isHangulJamo || isHangulSyllable || isIdeographicSpace || isKanaOrIdeograph;
+
     if (this.composing) {
-      if (data === ' ') {
+      // IME composition finalization indicators
+      if (data === ' ' || isIdeographicSpace || data === '\r' || data === '\n') {
         // Composition complete
         const result = this.composedData;
         this.composing = false;
         this.composedData = '';
-        return { data: result, skip: false };
+
+        // If it's a space that terminated composition, return the composed data
+        // but don't include the space itself
+        if (data === ' ' || isIdeographicSpace) {
+          return { data: result, skip: false };
+        }
+
+        // For newlines and carriage returns, include them after the composed text
+        return { data: result + data, skip: false };
       }
 
+      // For composition in progress
       this.composedData += data;
+      return { data: '', skip: true };
+    } else if (isIMERelated) {
+      // Auto-start composition for IME characters
+      this.composing = true;
+      this.composedData = data;
       return { data: '', skip: true };
     }
 

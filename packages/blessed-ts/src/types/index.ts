@@ -105,7 +105,7 @@ export type Position = number | string | 'center';
 /**
  * 노드 타입
  */
-export type NodeType = 'node' | 'element' | 'screen' | 'box' | 'scrollable-box' | 'scrollable-text' | 'text' | 'list' | 'form' | 'input' | 'textarea' | 'listbar' | 'textbox' | 'button' | 'checkbox' | 'radio-button' | 'radio-set' | 'table' | 'list-table' | 'line' | 'progress-bar' | 'message';
+export type NodeType = 'node' | 'element' | 'screen' | 'box' | 'scrollable-box' | 'scrollable-text' | 'text' | 'list' | 'form' | 'input' | 'textarea' | 'listbar' | 'textbox' | 'button' | 'checkbox' | 'radio-button' | 'radio-set' | 'table' | 'list-table' | 'line' | 'progress-bar' | 'message' | 'question' | 'prompt' | 'loading' | 'terminal' | 'image' | 'ansi-image' | 'overlay-image' | 'big-text' | 'file-manager' | 'log' | 'layout';
 
 /**
  * 기본 위젯 옵션 인터페이스

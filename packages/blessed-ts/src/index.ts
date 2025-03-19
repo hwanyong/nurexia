@@ -18,6 +18,10 @@ import { Screen } from './widgets/screen';
 import { ListBar } from './widgets/listbar';
 import { Form } from './widgets/form';
 
+// 특수 위젯들
+import { FileManager } from './widgets/filemanager';
+import { Log } from './widgets/log';
+
 // 그래핌 분할기 - 한글 등 다국어 지원에 필요
 import GraphemeSplitter from 'grapheme-splitter';
 const splitter = new GraphemeSplitter();
@@ -72,5 +76,7 @@ export default {
   List,
   ListBar,
   Form,
+  FileManager,
+  Log,
   unicode
 };

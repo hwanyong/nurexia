@@ -135,44 +135,44 @@
 
 - [x] `message.js` → `widgets/message.ts` 마이그레이션
   - [x] Message 클래스 구현 (Box 확장)
-- [ ] `question.js` → `widgets/question.ts` 마이그레이션
-  - [ ] Question 클래스 구현 (Box 확장)
-- [ ] `prompt.js` → `widgets/prompt.ts` 마이그레이션
-  - [ ] Prompt 클래스 구현 (Box 확장)
-- [ ] `loading.js` → `widgets/loading.ts` 마이그레이션
-  - [ ] Loading 클래스 구현 (Box 확장)
+- [x] `question.js` → `widgets/question.ts` 마이그레이션
+  - [x] Question 클래스 구현 (Box 확장)
+- [x] `prompt.js` → `widgets/prompt.ts` 마이그레이션
+  - [x] Prompt 클래스 구현 (Box 확장)
+- [x] `loading.js` → `widgets/loading.ts` 마이그레이션
+  - [x] Loading 클래스 구현 (Box 확장)
 
 ## 10. 특수 위젯 구현
 
-- [ ] `terminal.js` → `widgets/terminal.ts` 마이그레이션
-  - [ ] Terminal 클래스 구현 (Box 확장)
-  - [ ] 터미널 에뮬레이션 기능 구현
-- [ ] `image.js` → `widgets/image.ts` 마이그레이션
-  - [ ] Image 클래스 구현 (Box 확장)
-- [ ] `ansiimage.js` → `widgets/ansiimage.ts` 마이그레이션
-  - [ ] ANSIImage 클래스 구현 (Box 확장)
-- [ ] `overlayimage.js` → `widgets/overlayimage.ts` 마이그레이션
-  - [ ] OverlayImage 클래스 구현 (Box 확장)
+- [x] `terminal.js` → `widgets/terminal.ts` 마이그레이션
+  - [x] Terminal 클래스 구현 (Box 확장)
+  - [x] 터미널 에뮬레이션 기능 구현
+- [x] `image.js` → `widgets/image.ts` 마이그레이션
+  - [x] Image 클래스 구현 (Box 확장)
+- [x] `ansiimage.js` → `widgets/ansiimage.ts` 마이그레이션
+  - [x] ANSIImage 클래스 구현 (Box 확장)
+- [x] `overlayimage.js` → `widgets/overlayimage.ts` 마이그레이션
+  - [x] OverlayImage 클래스 구현 (Box 확장)
 - [ ] `video.js` → `widgets/video.ts` 마이그레이션 (필요시)
   - [ ] Video 클래스 구현 (Box 확장)
-- [ ] `bigtext.js` → `widgets/bigtext.ts` 마이그레이션
-  - [ ] BigText 클래스 구현 (Box 확장)
-- [ ] `filemanager.js` → `widgets/filemanager.ts` 마이그레이션
-  - [ ] FileManager 클래스 구현 (Box 확장)
-- [ ] `log.js` → `widgets/log.ts` 마이그레이션
-  - [ ] Log 클래스 구현 (ScrollableText 확장)
+- [x] `bigtext.js` → `widgets/bigtext.ts` 마이그레이션
+  - [x] BigText 클래스 구현 (Box 확장)
+- [x] `filemanager.js` → `widgets/filemanager.ts` 마이그레이션
+  - [x] FileManager 클래스 구현 (Box 확장)
+- [x] `log.js` → `widgets/log.ts` 마이그레이션
+  - [x] Log 클래스 구현 (ScrollableText 확장)
 
 ## 11. 레이아웃 관련 기능 구현
 
-- [ ] `layout.js` → `widgets/layout.ts` 마이그레이션
-  - [ ] Layout 클래스 구현 (Element 확장)
-  - [ ] 그리드 및 플렉스 레이아웃 구현
+- [x] `layout.js` → `widgets/layout.ts` 마이그레이션
+  - [x] Layout 클래스 구현 (Element 확장)
+  - [x] 그리드 및 플렉스 레이아웃 구현
 
 ## 12. 다국어 및 IME 지원 개선
 
-- [ ] IME 입력 처리 메커니즘 구현
-  - [ ] 한글, 중국어, 일본어 등 조합형 문자 입력 지원
-  - [ ] 입력 중인 조합 문자 시각화
+- [x] IME 입력 처리 메커니즘 구현
+  - [x] 한글, 중국어, 일본어 등 조합형 문자 입력 지원
+  - [x] 입력 중인 조합 문자 시각화
 - [ ] 유니코드 문자 너비 계산 개선
   - [ ] East Asian Width (EAW) 특성 지원
   - [ ] 결합 문자 및 이모지 지원
@@ -261,12 +261,43 @@
    - `input.ts`: Input 클래스 구현 완료
    - `textbox.ts`: TextBox 클래스 구현 완료
    - `button.ts`: Button 클래스 구현 완료
+   - `checkbox.ts`: Checkbox 클래스 구현 완료
+   - `radiobutton.ts`: RadioButton 클래스 구현 완료
+   - `radioset.ts`: RadioSet 클래스 구현 완료
+
+6. 데이터 표시 위젯 구현
+   - `text.ts`: Text 클래스 구현 완료
+   - `table.ts`: Table 클래스 구현 완료
+   - `listtable.ts`: ListTable 클래스 구현 완료
+   - `line.ts`: Line 클래스 구현 완료
+   - `progressbar.ts`: ProgressBar 클래스 구현 완료
+
+7. 대화상자 및 메시지 위젯 구현
+   - `message.ts`: Message 클래스 구현 완료
+   - `question.ts`: Question 클래스 구현 완료
+   - `prompt.ts`: Prompt 클래스 구현 완료
+   - `loading.ts`: Loading 클래스 구현 완료
+
+8. 특수 위젯 구현
+   - [x] `terminal.ts`: Terminal 클래스 구현 완료
+   - [x] `image.ts`: Image 클래스 구현 완료
+   - [x] `ansiimage.ts`: ANSIImage 클래스 구현 완료
+   - [x] `overlayimage.ts`: OverlayImage 클래스 구현 완료
+   - [x] `bigtext.ts`: BigText 클래스 구현 완료
+   - [x] `filemanager.ts`: FileManager 클래스 구현 완료
+   - [x] `log.ts`: Log 클래스 구현 완료
+
+9. 레이아웃 관련 기능 구현
+   - [x] `layout.ts`: Layout 클래스 구현 완료
 
 ### 다음 작업 예정
-1. 데이터 표시 위젯 구현 (계속)
-   - `listtable.ts`: ListTable 클래스 구현 (List 확장)
-   - `line.ts`: Line 클래스 구현 (Box 확장)
-   - `progressbar.ts`: ProgressBar 클래스 구현 (Box 확장)
+1. 특수 위젯 구현
+   - [ ] `video.ts`: Video 클래스 구현 (필요시)
+
+2. 다국어 및 IME 지원 개선
+   - [x] IME 입력 처리 메커니즘 구현
+   - [x] 한글, 중국어, 일본어 등 조합형 문자 입력 지원
+   - [x] 입력 중인 조합 문자 시각화
 
 ## 노트
 
