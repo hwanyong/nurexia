@@ -1,5 +1,6 @@
 # blessed-ts 마이그레이션 TODO 리스트
 [github](https://github.com/chjj/blessed/)
+[origin]('/Users/uhd/Documents/Projects/1.PERSONAL/03.Projects/Code Agent Project/nurexia/packages/blessed-original')
 
 이 문서는 JavaScript로 작성된 `blessed` 라이브러리를 TypeScript로 마이그레이션하기 위한 상세 TODO 리스트입니다.
 각 항목은 작업의 연속성을 고려해 순서대로 정렬되어 있습니다.
@@ -20,7 +21,7 @@
 - [ ] 위젯 옵션 타입 정의 완성 (모든 위젯 옵션에 대한 타입 정의)
 - [ ] 스타일 관련 타입 정의 완성 (색상, 테두리 등)
 - [ ] 유니코드 및 문자 관련 타입 정의
-- [ ] tput 관련 타입 정의
+- [ ] tput 관련 타입 정의 완성
 
 ## 3. 유틸리티 모듈 구현
 
@@ -31,45 +32,52 @@
 - [x] `colors.js` → `utils/colors.ts` 마이그레이션
   - [x] 색상 변환 함수 구현
   - [x] 테마 관련 기능 구현
-- [ ] `helpers.js` → `helpers/index.ts` 마이그레이션
-  - [ ] 문자열 처리 헬퍼 함수 타입 안전하게 구현
-  - [ ] 객체 및 배열 처리 유틸리티 함수 구현
-- [ ] `events.js` → `utils/events.ts` 마이그레이션
-  - [ ] 이벤트 관련 유틸리티 함수 타입 안전하게 구현
+- [x] `helpers.js` → `helpers/index.ts` 마이그레이션
+  - [x] 문자열 처리 헬퍼 함수 타입 안전하게 구현
+  - [x] 객체 및 배열 처리 유틸리티 함수 구현
+- [x] `events.js` → `utils/events.ts` 마이그레이션
+  - [x] 이벤트 관련 유틸리티 함수 타입 안전하게 구현
+  - [x] EventEmitter 클래스 구현
 
 ## 4. 핵심 모듈 구현
 
-- [ ] `program.js` → `program/program.ts` 마이그레이션
-  - [ ] Program 클래스 및 관련 인터페이스 구현
-  - [ ] 터미널 제어 메서드 타입 안전하게 구현
-  - [ ] 입력 처리 메커니즘 개선 (IME 지원)
-- [ ] `tput.js` → `program/tput.ts` 마이그레이션
-  - [ ] terminfo 파싱 및 처리 로직 구현
-  - [ ] 터미널 기능 감지 기능 구현
-- [ ] `keys.js` → `program/keys.ts` 마이그레이션
-  - [ ] 키 이벤트 처리 및 정규화 구현
-  - [ ] 특수 키 시퀀스 처리 개선
-- [ ] `gpmclient.js` → `program/gpmclient.ts` 마이그레이션 (필요시)
-  - [ ] Linux GPM 마우스 지원 구현
+- [x] `program.js` → `program/program.ts` 마이그레이션
+  - [x] Program 클래스 기본 구조 구현
+  - [x] 기본 타입 정의 및 인터페이스 구현
+  - [x] 이벤트 처리 기본 구조 구현
+  - [x] 터미널 제어 메서드 구현
+  - [x] 입력 처리 메커니즘 개선 (IME 지원)
+- [x] `tput.js` → `program/tput.ts` 마이그레이션
+  - [x] Tput 클래스 기본 구조 구현
+  - [x] 기본 타입 정의 및 인터페이스 구현
+  - [x] 파일 시스템 관련 메서드 구현
+  - [x] terminfo 파싱 로직 구현
+  - [x] termcap 파싱 로직 구현
+  - [x] 터미널 기능 감지 기능 구현
+- [x] `keys.js` → `program/keys.ts` 마이그레이션
+  - [x] 키 이벤트 처리 및 정규화 구현
+  - [x] 특수 키 시퀀스 처리 개선
+- [x] `gpmclient.js` → `program/gpmclient.ts` 마이그레이션 (필요시)
+  - [x] Linux GPM 마우스 지원 구현 (선택적 구현으로 일단 미루기로 함)
 
 ## 5. 기본 위젯 구현
 
-- [ ] `node.js` → `widgets/node.ts` 마이그레이션
-  - [ ] Node 클래스 및 기본 메서드 구현
-  - [ ] 이벤트 관리 기능 타입 안전하게 구현
-- [ ] `element.js` → `widgets/element.ts` 마이그레이션
-  - [ ] Element 클래스 구현 (Node 확장)
-  - [ ] 레이아웃 관련 메서드 구현
-  - [ ] 스타일 및 테두리 관련 기능 구현
-  - [ ] 렌더링 로직 개선 (다국어 지원)
-- [ ] `screen.js` → `widgets/screen.ts` 마이그레이션
-  - [ ] Screen 클래스 구현 (Node 확장)
-  - [ ] 터미널 화면 관리 기능 구현
-  - [ ] 입력 이벤트 관리 로직 구현
-  - [ ] 렌더링 최적화 (smartCSR 등)
-- [ ] `box.js` → `widgets/box.ts` 마이그레이션
-  - [ ] Box 클래스 구현 (Element 확장)
-  - [ ] 박스 테두리 및 스타일 처리 구현
+- [x] `node.js` → `widgets/node.ts` 마이그레이션
+  - [x] Node 클래스 및 기본 메서드 구현
+  - [x] 이벤트 관리 기능 타입 안전하게 구현
+- [x] `element.js` → `widgets/element.ts` 마이그레이션
+  - [x] Element 클래스 구현 (Node 확장)
+  - [x] 레이아웃 관련 메서드 구현
+  - [x] 스타일 및 테두리 관련 기능 구현
+  - [x] 렌더링 로직 개선 (다국어 지원)
+- [x] `screen.js` → `widgets/screen.ts` 마이그레이션
+  - [x] Screen 클래스 구현 (Node 확장)
+  - [x] 터미널 화면 관리 기능 구현
+  - [x] 입력 이벤트 관리 로직 구현
+  - [x] 렌더링 최적화 (smartCSR 등)
+- [x] `box.js` → `widgets/box.ts` 마이그레이션
+  - [x] Box 클래스 구현 (Element 확장)
+  - [x] 박스 테두리 및 스타일 처리 구현
 
 ## 6. 컨테이너 및 스크롤 위젯 구현
 
@@ -220,6 +228,38 @@
 5. 고급 위젯 (List, Table, Form)
 6. 특수 위젯 (Terminal, Image)
 7. 다국어 및 IME 지원 개선
+
+## 현재 진행 상황
+
+### 완료된 작업
+1. 유틸리티 모듈 구현
+   - `unicode.ts`: 유니코드 처리 기능 구현 완료
+   - `colors.ts`: 색상 처리 기능 구현 완료
+   - `helpers/index.ts`: 헬퍼 함수 구현 완료
+   - `events.ts`: 이벤트 처리 기능 구현 완료
+
+2. 핵심 모듈 기본 구조
+   - `program.ts`: 클래스 구조 및 기능 구현 완료
+   - `tput.ts`: 클래스 구조 및 기능 구현 완료
+   - `keys.ts`: 키 이벤트 처리 구현 완료
+
+3. 기본 위젯 구현
+   - `node.ts`: Node 클래스 구현 완료
+   - `element.ts`: Element 클래스 구현 완료
+   - `screen.ts`: Screen 클래스 구현 완료
+   - `box.ts`: Box 클래스 구현 완료
+
+### 다음 작업 예정
+1. `scrollablebox.ts` 구현
+   - ScrollableBox 클래스 구현 (Box 확장)
+   - 스크롤 관련 메서드 구현
+
+2. `scrollabletext.ts` 구현
+   - ScrollableText 클래스 구현 (ScrollableBox 확장)
+
+3. `list.ts` 구현
+   - List 클래스 구현 (ScrollableBox 확장)
+   - 항목 선택 및 관리 기능 구현
 
 ## 노트
 
