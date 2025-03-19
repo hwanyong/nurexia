@@ -27,6 +27,7 @@ const main = async (): Promise<void> => {
         color: 'green',
         blink: true,
       },
+      fullUnicode: true,
       debug: true
     });
 
