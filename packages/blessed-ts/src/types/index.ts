@@ -35,6 +35,38 @@ export interface Style {
   invisible?: boolean;
   transparent?: boolean;
   border?: Border;
+  scrollbar?: {
+    fg?: Color;
+    bg?: Color;
+    bold?: boolean;
+    underline?: boolean;
+    inverse?: boolean;
+    invisible?: boolean;
+  };
+  track?: {
+    fg?: Color;
+    bg?: Color;
+    bold?: boolean;
+    underline?: boolean;
+    inverse?: boolean;
+    invisible?: boolean;
+  };
+  selected?: {
+    fg?: Color;
+    bg?: Color;
+    bold?: boolean;
+    underline?: boolean;
+    inverse?: boolean;
+    invisible?: boolean;
+  };
+  item?: {
+    fg?: Color;
+    bg?: Color;
+    bold?: boolean;
+    underline?: boolean;
+    inverse?: boolean;
+    invisible?: boolean;
+  };
 }
 
 /**
@@ -45,7 +77,7 @@ export type Position = number | string | 'center';
 /**
  * 노드 타입
  */
-export type NodeType = 'node' | 'element' | 'screen' | 'box' | 'text' | 'list' | 'form' | 'input' | 'textarea';
+export type NodeType = 'node' | 'element' | 'screen' | 'box' | 'scrollable-box' | 'scrollable-text' | 'text' | 'list' | 'form' | 'input' | 'textarea' | 'listbar';
 
 /**
  * 기본 위젯 옵션 인터페이스

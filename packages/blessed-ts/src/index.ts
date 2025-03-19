@@ -12,11 +12,11 @@ import { Program } from './program/program';
 // 핵심 위젯들
 import { Node } from './widgets/node';
 import { Element } from './widgets/element';
-import { Textarea } from './widgets/textarea';
 import { Box } from './widgets/box';
-import { Text } from './widgets/text';
 import { List } from './widgets/list';
 import { Screen } from './widgets/screen';
+import { ListBar } from './widgets/listbar';
+import { Form } from './widgets/form';
 
 // 그래핌 분할기 - 한글 등 다국어 지원에 필요
 import GraphemeSplitter from 'grapheme-splitter';
@@ -69,8 +69,8 @@ export default {
   Element,
   Screen,
   Box,
-  Text,
   List,
-  Textarea,
+  ListBar,
+  Form,
   unicode
 };

@@ -81,30 +81,30 @@
 
 ## 6. 컨테이너 및 스크롤 위젯 구현
 
-- [ ] `scrollablebox.js` → `widgets/scrollablebox.ts` 마이그레이션
-  - [ ] ScrollableBox 클래스 구현 (Box 확장)
-  - [ ] 스크롤 관련 메서드 구현
-  - [ ] 유니코드 지원 스크롤링 개선
-- [ ] `scrollabletext.js` → `widgets/scrollabletext.ts` 마이그레이션
-  - [ ] ScrollableText 클래스 구현 (ScrollableBox 확장)
-- [ ] `list.js` → `widgets/list.ts` 마이그레이션
-  - [ ] List 클래스 구현 (ScrollableBox 확장)
-  - [ ] 항목 선택 및 관리 기능 구현
-- [ ] `listbar.js` → `widgets/listbar.ts` 마이그레이션
-  - [ ] ListBar 클래스 구현 (Box 확장)
+- [x] `scrollablebox.js` → `widgets/scrollablebox.ts` 마이그레이션
+  - [x] ScrollableBox 클래스 구현 (Box 확장)
+  - [x] 스크롤 관련 메서드 구현
+  - [x] 유니코드 지원 스크롤링 개선
+- [x] `scrollabletext.js` → `widgets/scrollabletext.ts` 마이그레이션
+  - [x] ScrollableText 클래스 구현 (ScrollableBox 확장)
+- [x] `list.js` → `widgets/list.ts` 마이그레이션
+  - [x] List 클래스 구현 (ScrollableBox 확장)
+  - [x] 항목 선택 및 관리 기능 구현
+- [x] `listbar.js` → `widgets/listbar.ts` 마이그레이션
+  - [x] ListBar 클래스 구현 (Box 확장)
 
 ## 7. 입력 관련 위젯 구현
 
-- [ ] `form.js` → `widgets/form.ts` 마이그레이션
-  - [ ] Form 클래스 구현 (Box 확장)
-  - [ ] 폼 요소 관리 기능 구현
-- [ ] `input.js` → `widgets/input.ts` 마이그레이션
-  - [ ] Input 클래스 구현 (Textarea 확장)
-- [ ] `textarea.js` → `widgets/textarea.ts` 마이그레이션
-  - [ ] Textarea 클래스 구현 (ScrollableBox 확장)
-  - [ ] 텍스트 편집 기능 구현
-  - [ ] IME 입력 지원 개선
-  - [ ] 다국어 입력 처리 개선
+- [x] `form.js` → `widgets/form.ts` 마이그레이션
+  - [x] Form 클래스 구현 (Box 확장)
+  - [x] 폼 요소 관리 기능 구현
+- [x] `input.js` → `widgets/input.ts` 마이그레이션
+  - [x] Input 클래스 구현 (Textarea 확장)
+- [x] `textarea.js` → `widgets/textarea.ts` 마이그레이션
+  - [x] Textarea 클래스 구현 (ScrollableBox 확장)
+  - [x] 텍스트 편집 기능 구현
+  - [x] IME 입력 지원 개선
+  - [x] 다국어 입력 처리 개선
 - [ ] `textbox.js` → `widgets/textbox.ts` 마이그레이션
   - [ ] TextBox 클래스 구현 (Textarea 확장)
 - [ ] `button.js` → `widgets/button.ts` 마이그레이션
@@ -249,17 +249,21 @@
    - `screen.ts`: Screen 클래스 구현 완료
    - `box.ts`: Box 클래스 구현 완료
 
+4. 컨테이너 및 스크롤 위젯 구현
+   - `scrollablebox.ts`: ScrollableBox 클래스 구현 완료
+   - `scrollabletext.ts`: ScrollableText 클래스 구현 완료
+   - `list.ts`: List 클래스 구현 완료
+   - `listbar.ts`: ListBar 클래스 구현 완료
+
+5. 입력 관련 위젯 구현
+   - `form.ts`: Form 클래스 구현 완료
+   - `textarea.ts`: Textarea 클래스 구현 완료
+   - `input.ts`: Input 클래스 구현 완료
+
 ### 다음 작업 예정
-1. `scrollablebox.ts` 구현
-   - ScrollableBox 클래스 구현 (Box 확장)
-   - 스크롤 관련 메서드 구현
-
-2. `scrollabletext.ts` 구현
-   - ScrollableText 클래스 구현 (ScrollableBox 확장)
-
-3. `list.ts` 구현
-   - List 클래스 구현 (ScrollableBox 확장)
-   - 항목 선택 및 관리 기능 구현
+1. 입력 관련 위젯 추가 구현
+   - `textbox.ts`: TextBox 클래스 구현 (Textarea 확장)
+   - `button.ts`: Button 클래스 구현 (Box 확장)
 
 ## 노트
 
