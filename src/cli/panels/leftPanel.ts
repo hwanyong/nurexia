@@ -5,9 +5,9 @@
  */
 
 import blessed from 'blessed';
-import { layoutInfo } from '../constants/layout';
-import { createTreeWidget, setupTreeWidgetEvents, loadSampleTreeData } from '../widgets/treeWidget';
-import { createScrollBoxWidget } from '../widgets/scrollBoxWidget';
+import { layoutInfo } from '../constants/layout.js';
+import { createTreeWidget, setupTreeWidgetEvents, loadSampleTreeData } from '../widgets/treeWidget.js';
+import { createScrollBoxWidget } from '../widgets/scrollBoxWidget.js';
 
 export interface LeftPanelComponents {
   panel: blessed.Widgets.BoxElement;

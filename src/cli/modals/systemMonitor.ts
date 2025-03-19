@@ -50,9 +50,6 @@ export const createSystemMonitorModal = (screen: blessed.Widgets.Screen) => {
     style: { line: 'blue' }
   }];
 
-  // Set initial data
-  systemMonitorModal.setData(systemMonitorData);
-
   // Function to toggle the system monitor modal
   const toggleSystemMonitorModal = () => {
     // Toggle visibility

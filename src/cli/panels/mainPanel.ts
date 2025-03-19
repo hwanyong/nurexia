@@ -5,9 +5,9 @@
  */
 
 import blessed from 'blessed';
-import { layoutInfo, textBoxConfig } from '../constants/layout';
-import { createScrollBoxWidget } from '../widgets/scrollBoxWidget';
-import { createTextareaWidget, setupTextareaAutoResize } from '../widgets/textareaWidget';
+import { layoutInfo, textBoxConfig } from '../constants/layout.js';
+import { createScrollBoxWidget } from '../widgets/scrollBoxWidget.js';
+import { createTextareaWidget, setupTextareaAutoResize } from '../widgets/textareaWidget.js';
 
 export interface MainPanelComponents {
   panel: blessed.Widgets.BoxElement;

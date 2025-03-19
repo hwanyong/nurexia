@@ -5,8 +5,8 @@
  */
 
 import blessed from 'blessed';
-import { layoutInfo } from '../constants/layout';
-import { createScrollBoxWidget } from '../widgets/scrollBoxWidget';
+import { layoutInfo } from '../constants/layout.js';
+import { createScrollBoxWidget } from '../widgets/scrollBoxWidget.js';
 
 export interface RightPanelComponents {
   panel: blessed.Widgets.BoxElement;

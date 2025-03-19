@@ -6,12 +6,12 @@
  */
 
 import blessed from 'blessed';
-import { createLeftPanel } from './panels/leftPanel';
-import { createMainPanel } from './panels/mainPanel';
-import { createRightPanel } from './panels/rightPanel';
-import { createBottomPanel } from './panels/bottomPanel';
-import { createSystemMonitorModal } from './modals/systemMonitor';
-import { setupScreenEvents } from './utils/screenEvents';
+import { createLeftPanel } from './panels/leftPanel.js';
+import { createMainPanel } from './panels/mainPanel.js';
+import { createRightPanel } from './panels/rightPanel.js';
+import { createBottomPanel } from './panels/bottomPanel.js';
+import { createSystemMonitorModal } from './modals/systemMonitor.js';
+import { setupScreenEvents } from './utils/screenEvents.js';
 
 /**
  * CLI 진입점

@@ -4,7 +4,7 @@
  */
 
 import blessed from 'blessed';
-import { layoutInfo } from '../constants/layout';
+import { layoutInfo } from '../constants/layout.js';
 
 export interface BottomPanelComponent {
   panel: blessed.Widgets.BoxElement;
