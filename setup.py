@@ -12,7 +12,7 @@ setup(
     description="Nurexia - A CLI tool",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/nurexia",
+    url="https://github.com/hwanyong/nurexia",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
