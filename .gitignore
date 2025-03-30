@@ -1,32 +1,52 @@
-# Dependency directories
-node_modules/
-.pnpm-store/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
 
-# Build output
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
 dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Logs
-logs
-*.log
-npm-debug.log*
-pnpm-debug.log*
-
-# Environment variables
+# Virtual environments
+venv/
+env/
+ENV/
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.venv
 
-# Editor directories and files
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+pytest_cache/
+
+# IDE specific files
 .idea/
-# .vscode/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# OS specific
+.vscode/
+*.swp
+*.swo
 .DS_Store
-Thumbs.db
+
+# Project specific
+*.log
