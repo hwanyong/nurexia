@@ -8,17 +8,26 @@
 
 ```bash
 # 가상 환경 생성 (선택 사항)
-python -m venv .venv
-source .venv/bin/activate  # Linux/MacOS
-# .venv\Scripts\activate   # Windows
+python -m venv .venv --clear  # 깨끗한 가상 환경 생성
+source .venv/bin/activate     # Linux/MacOS
+# .venv\Scripts\activate      # Windows
 
 # 개발 모드로 설치
-pip install -e .
+python -m pip install -e .
+```
+
+### 외부 관리형 환경 문제 해결
+
+최신 Python 버전(3.11+)에서 외부 관리형 환경 관련 오류가 발생할 경우 다음 방법을 사용하세요:
+
+```bash
+# 외부 관리형 환경 오류 발생 시
+python -m pip install -e . --break-system-packages
 ```
 
 ## 실행 방법
 
-Nurexia는 세 가지 모드로 실행할 수 있습니다:
+Nurexia는 여러 가지 모드와 옵션으로 실행할 수 있습니다:
 
 ### 기본 모드 (Chat)
 
@@ -43,6 +52,20 @@ nurexia -m agent
 ```bash
 nurexia --mode edit
 ```
+
+### 작업 디렉터리 지정
+
+```bash
+# 특정 디렉터리를 작업 디렉터리로 지정
+nurexia --workspace /경로/디렉터리
+# 또는 짧은 옵션 사용
+nurexia -ws /경로/디렉터리
+
+# 모드와 함께 사용
+nurexia -m edit -ws /경로/디렉터리
+```
+
+> 참고: 작업 디렉터리 옵션을 지정하지 않으면 현재 명령어를 실행한 디렉터리가 자동으로 작업 디렉터리로 사용됩니다.
 
 ### 도움말 보기
 
