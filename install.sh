@@ -10,10 +10,19 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
-# Check if pip is installed
-if ! command -v pip3 &> /dev/null; then
-    echo "pip3 is required but it's not installed. Please install pip and try again."
-    exit 1
+# Check if uv is installed
+if ! command -v uv &> /dev/null; then
+    echo "UV package manager is required but it's not installed."
+    echo "Would you like to install it now? (y/n)"
+    read -r answer
+    if [[ "$answer" =~ ^[Yy]$ ]]; then
+        echo "Installing UV package manager..."
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        source $HOME/.local/bin/env
+    else
+        echo "UV installation declined. Exiting."
+        exit 1
+    fi
 fi
 
 # Create a temporary directory
@@ -31,7 +40,7 @@ trap cleanup EXIT
 
 # Install the package
 echo "Installing package from current directory..."
-pip3 install --user .
+uv pip install --user .
 
 echo "Nurexia has been installed successfully!"
 echo "You can now use the 'nurexia' command in your terminal."
