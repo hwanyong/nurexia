@@ -63,7 +63,7 @@ git clone https://github.com/hwanyong/nurexia.git
 cd nurexia
 
 # 가상 환경 설정 및 개발 모드 설치
-python3 -m venv venv && source venv/bin/activate && pip install -e .
+python3 -m venv venv && source venv/bin/activate && uv pip install -e .
 ```
 
 **명령어 설명**:
