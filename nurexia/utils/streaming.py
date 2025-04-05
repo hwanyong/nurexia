@@ -26,6 +26,17 @@ async def execute_streaming(state: GraphState):
             **state.options
         )
 
+        # 스트리밍 지원 확인
+        if not provider_instance.supports_streaming:
+            click.echo(f"\n{state.provider} Provider는 스트리밍을 지원하지 않습니다.")
+            click.echo("비스트리밍 모드로 실행합니다...")
+
+            # 일반 모드로 대체 실행
+            messages = state.get_conversation_history()
+            response = await provider_instance.chat(messages)
+            click.echo(response["content"])
+            return
+
         # 스트리밍 시작
         messages = state.get_conversation_history()
 
@@ -50,7 +61,22 @@ def setup_streaming(provider: str, model: Optional[str], options: Dict[str, Any]
     Returns:
         스트리밍 함수
     """
-    # 옵션에 스트리밍 설정 추가
+    # Provider 인스턴스 생성
+    provider_instance = get_provider(provider, model, **options)
+
+    # 스트리밍 지원 확인
+    if not provider_instance.supports_streaming:
+        async def fallback_streamer(messages):
+            """스트리밍 미지원 시 대체 함수"""
+            click.echo(f"\n{provider} Provider는 스트리밍을 지원하지 않습니다.")
+            click.echo("비스트리밍 모드로 실행합니다...")
+
+            response = await provider_instance.chat(messages)
+            yield response["content"]
+
+        return fallback_streamer
+
+    # 스트리밍 옵션 추가
     updated_options = {**options, "stream": True}
 
     provider_instance = get_provider(provider, model, **updated_options)
