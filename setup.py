@@ -9,7 +9,15 @@ setup(
         "python-dotenv",
         "langchain",
         "langchain-anthropic",
+        "langchain-openai",
+        "langchain-google-genai",
+        "langchain-huggingface",
+        "langchain-community",
+        "langchain-ollama",
         "anthropic",
+        "openai",
+        "google-generativeai",
+        "huggingface_hub",
     ],
     entry_points={
         "console_scripts": [

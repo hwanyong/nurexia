@@ -6,10 +6,18 @@ from typing import Dict, Type, Optional, List, Any
 
 from .base import BaseProvider
 from .anthropic import AnthropicProvider
+from .openai import OpenAIProvider
+from .google import GoogleProvider
+from .huggingface import HuggingFaceProvider
+from .ollama import OllamaProvider
 
 # Provider 등록
 PROVIDERS = {
     "anthropic": AnthropicProvider,
+    "openai": OpenAIProvider,
+    "google": GoogleProvider,
+    "huggingface": HuggingFaceProvider,
+    "ollama": OllamaProvider,
 }
 
 def get_provider(provider_name: str, model: Optional[str] = None, **kwargs) -> BaseProvider:
