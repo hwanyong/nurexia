@@ -17,6 +17,7 @@ python -m pip install -e .
 
 # 외부 관리형 환경 오류 발생 시 다음 옵션 사용
 # python -m pip install -e . --break-system-packages
+# python3 -m venv .venv --clear && source .venv/bin/activate && python -m pip install -e .
 ```
 
 ## 테스트 방법
@@ -111,6 +112,13 @@ nurexia -pv invalid-provider -p "안녕하세요"
 
 # 유효하지 않은 온도 테스트
 nurexia -p "안녕하세요" -t 3.0
+
+nurexia -md deepseek-r1:14b -pv ollama -p "C언어의 특징을 알 수 있는 대표적인 예제를 작성해. 특히 struct 로 OOP 개념의 개발이 가능한 예제를 포함해" --stream-mode -v
+nurexia -md claude-3-7-sonnet-20250219 -pv anthropic -p "C언어의 특징을 알 수 있는 대표적인 예제를 작성해. 특히 struct 로 OOP 개념의 개발이 가능한 예제를 포함해" --stream-mode -v
+nurexia -md gemini-2.0-flash-001 -pv google -p "C언어의 특징을 알 수 있는 대표적인 예제를 작성해. 특히 struct 로 OOP 개념의 개발이 가능한 예제를 포함해" --stream-mode -v
+nurexia -md HuggingFaceH4/zephyr-7b-beta -pv huggingface -p "C언어의 특징을 알 수 있는 대표적인 예제를 작성해. 특히 struct 로 OOP 개념의 개발이 가능한 예제를 포함해" -v
+nurexia -md gemma3:12b -pv ollama -p "C언어의 특징을 알 수 있는 대표적인 예제를 작성해. 특히 struct 로 OOP 개념의 개발이 가능한 예제를 포함해" --stream-mode -v
+nurexia -pv anthropic -p "C언어의 특징을 알 수 있는 대표적인 예제를 작성해. 특히 struct 로 OOP 개념의 개발이 가능한 예제를 포함해" --stream-mode -v
 ```
 
 ## 금지된 테스트 방법
