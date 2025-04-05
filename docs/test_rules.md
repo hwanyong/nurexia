@@ -49,7 +49,7 @@ nurexia -m edit -ws /path/to/dir
 
 ## 금지된 테스트 방법
 
-다음과 같은 모듈 직접 호출 방식은 사용하지 마세요:
+1. 다음과 같은 모듈 직접 호출 방식은 사용하지 마세요:
 
 ```bash
 python -m nurexia.cli
@@ -58,3 +58,8 @@ python -m nurexia.cli -ws /Users
 ```
 
 **이유**: 모듈 직접 호출은 실제 명령행 도구의 동작과 환경을 정확히 반영하지 않습니다.
+
+2. expert로 임의로 환경 변수 추가 금지
+```bash
+export PATH="$PWD/.test_env/bin:$PATH" && nurexia
+```

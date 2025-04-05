@@ -1,0 +1,30 @@
+현재 프로젝트에 LangGraph를 적용해보자.
+다음 조건을 만족하는 코드를 작성해보자.
+
+첫번째. AI Provider를 적용
+AI Provider 대상:
+- Anthropic: https://python.langchain.com/docs/integrations/chat/anthropic/
+- OpenAI: https://python.langchain.com/docs/integrations/chat/openai/
+- HuggingFace: https://python.langchain.com/docs/integrations/chat/huggingface/
+- Ollama: https://python.langchain.com/docs/integrations/chat/ollama/
+- Google: https://python.langchain.com/docs/integrations/chat/google_generative_ai/
+
+두번째. 기본 모델 적용
+- Anthropic: 'claude-3-7-sonnet-20250219'
+- OpenAI: 'gpt-4.5-preview-2025-02-27'
+- HuggingFace: 'HuggingFaceH4/zephyr-7b-beta'
+- Ollama: 'gemma3:12b'
+- Google: 'gemini-2.0-flash-001'
+
+세번째. AI Provider의 환경 변수을 관리하는 코드 구현
+- python 환경에 맞는 환경 변수 관리 방법을 적용
+
+네번째. Click 라이브러리를 이용한 CLI의 옵션 구현
+- `-m`, `--model` 옵션: 모델 선택
+- `-`, `--provider` 옵션: AI Provider 선택
+- `-o`, `--output` 옵션: 출력 형식 선택
+- `-v`, `--verbose` 옵션: 상세 로깅 선택
+- `-h`, `--help` 옵션: 도움말 출력
+- `-p`, `--prompt` 옵션: 프롬프트 작성. markdown 형식으로 작성. 이스케이프 문자 사용 가능
+- `-t`, `--temperature` 옵션: 온도 선택
+- `-s`, `--stream` 옵션: 스트리밍 출력 선택

@@ -53,3 +53,6 @@ coverage.xml
 
 # Log files
 *.log
+
+# Environment variables
+.env
