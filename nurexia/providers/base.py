@@ -2,7 +2,7 @@
 모든 AI Provider의 기본 인터페이스 정의.
 """
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, Any, List, Optional, Union, Tuple
 
 class BaseProvider(ABC):
     """모든 AI Provider의 기본 인터페이스"""
@@ -35,15 +35,13 @@ class BaseProvider(ABC):
         pass
 
     @abstractmethod
-    def generate(self, prompt: str, options: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def test_connection(self) -> Tuple[bool, str]:
         """
-        텍스트 생성
-
-        Args:
-            prompt: 입력 프롬프트
-            options: 생성 옵션
+        Provider API 연결 테스트
 
         Returns:
-            생성 결과
+            Tuple[bool, str]: (성공 여부, 메시지)
+                - 성공: (True, "연결 성공 메시지")
+                - 실패: (False, "오류 메시지")
         """
         pass

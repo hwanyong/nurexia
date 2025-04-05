@@ -17,8 +17,8 @@ Nurexia CLI 도구에 LangGraph와 다양한 AI Provider를 통합하여 확장�
 - Python 환경에 적합한 방식으로 구현
 
 ### CLI 옵션 확장
-- `-m`, `--model`: 모델 선택
-- `-p`, `--provider`: AI Provider 선택
+- `-md`, `--model`: 모델 선택
+- `-pv`, `--provider`: AI Provider 선택
 - `-o`, `--output`: 출력 형식 선택
 - `-v`, `--verbose`: 상세 로깅 선택
 - `-h`, `--help`: 도움말 출력 (기본 제공)

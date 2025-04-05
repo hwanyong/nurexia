@@ -20,8 +20,8 @@ AI Provider 대상:
 - python 환경에 맞는 환경 변수 관리 방법을 적용
 
 네번째. Click 라이브러리를 이용한 CLI의 옵션 구현
-- `-m`, `--model` 옵션: 모델 선택
-- `-`, `--provider` 옵션: AI Provider 선택
+- `-md`, `--model` 옵션: 모델 선택
+- `-pv`, `--provider` 옵션: AI Provider 선택
 - `-o`, `--output` 옵션: 출력 형식 선택
 - `-v`, `--verbose` 옵션: 상세 로깅 선택
 - `-h`, `--help` 옵션: 도움말 출력
