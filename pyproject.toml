@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nurexia"
+version = "0.2.0"
+description = "터미널 기반 AI 도구 명령행 인터페이스"
+readme = "README.md"
+requires-python = ">=3.6"
+license = {text = "MIT"}
+authors = [
+    {name = "nurexia developers"}
+]
+dependencies = [
+    "click",
+    "python-dotenv",
+    "langchain",
+    "langchain-anthropic",
+    "langchain-openai",
+    "langchain-google-genai",
+    "langchain-huggingface",
+    "langchain-community",
+    "langchain-ollama",
+    "anthropic",
+    "openai",
+    "google-generativeai",
+    "huggingface_hub",
+]
+
+[project.scripts]
+nurexia = "nurexia.cli:cli"
+
+[tool.setuptools]
+packages = ["nurexia"]
+
+[tool.black]
+line-length = 88
+target-version = ['py36']
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E203"]
