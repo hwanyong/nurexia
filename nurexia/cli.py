@@ -4,6 +4,8 @@ import asyncio
 import sys
 from dotenv import load_dotenv
 
+sys.path.insert(0, os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+
 # Provider 모듈 import
 from .providers import list_providers, test_provider_connection, get_provider
 from .graph.state import GraphState, MessageRole
